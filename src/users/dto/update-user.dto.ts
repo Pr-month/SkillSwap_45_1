@@ -9,7 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-import { Gender } from '../entities/user.entity';
+import { Gender } from '../enums/users.enums';
 
 export class UpdateUserDto {
   @IsOptional()

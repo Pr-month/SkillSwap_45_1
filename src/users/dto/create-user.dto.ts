@@ -9,11 +9,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
-}
+import { Gender } from '../enums/users.enums';
 
 export class CreateUserDto {
   @IsString()

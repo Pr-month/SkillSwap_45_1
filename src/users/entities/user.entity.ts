@@ -11,16 +11,7 @@ import {
 //import { CategoryEntity } from './category.entity';
 //import { RequestEntity } from './request.entity';
 
-export enum UserRole {
-  USER = 'USER',
-  ADMIN = 'ADMIN',
-}
-
-export enum Gender {
-  MALE = 'MALE',
-  FEMALE = 'FEMALE',
-  OTHER = 'OTHER',
-}
+import { Gender, UserRole } from '../enums/users.enums';
 
 @Entity('users')
 export class UserEntity {
