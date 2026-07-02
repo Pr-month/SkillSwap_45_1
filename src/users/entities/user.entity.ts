@@ -2,9 +2,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
-  OneToMany,
-  JoinTable,
+  // ManyToMany,
+  // OneToMany,
+  //JoinTable,
 } from 'typeorm';
 
 //import { SkillEntity } from './skill.entity';
@@ -62,17 +62,17 @@ export class UserEntity {
   //@OneToMany(
   //  () => SkillEntity,
   //  (skill) => skill.author,
- // )
- // skills!: SkillEntity[];
+  // )
+  // skills!: SkillEntity[];
 
   // Категории, которым хочет научиться
- // @ManyToMany(() => CategoryEntity)
- // @JoinTable()
- // wantToLearn!: CategoryEntity[];
+  // @ManyToMany(() => CategoryEntity)
+  // @JoinTable()
+  // wantToLearn!: CategoryEntity[];
 
   // Избранные навыки
- // @ManyToMany(() => SkillEntity)
- // @JoinTable()
+  // @ManyToMany(() => SkillEntity)
+  // @JoinTable()
   //favoriteSkills!: SkillEntity[];
 
   @Column({
@@ -88,9 +88,9 @@ export class UserEntity {
   refreshToken!: string;
 
   // Заявки
- // @OneToMany(
- //   () => RequestEntity,
- //   (request) => request.user,
- // )
- // requests!: RequestEntity[];
+  // @OneToMany(
+  //   () => RequestEntity,
+  //   (request) => request.user,
+  // )
+  // requests!: RequestEntity[];
 }
