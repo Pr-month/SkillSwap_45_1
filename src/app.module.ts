@@ -6,6 +6,8 @@ import { appConfig } from './app.config';
 import { jwtConfig } from './jwt.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { AppDataSource } from '../ormconfig';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -13,6 +15,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal: true,
       load: [appConfig, jwtConfig],
     }),
+    TypeOrmModule.forRoot(AppDataSource.options),
     UsersModule, 
     AuthModule],
   controllers: [AppController],
