@@ -6,7 +6,7 @@ import { appConfig } from './config/app.config';
 import { jwtConfig } from './config/jwt.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { AppDataSource } from '../ormconfig';
+import { AppDataSource } from './config/ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
