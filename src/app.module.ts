@@ -1,15 +1,13 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { appConfig } from './app.config';
 import { jwtConfig } from './jwt.config';
-import { dbConfig } from './db.config';
+import { dbConfig, TDatabaseConfig } from './config/db.config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-// import { AppDataSource } from '../ormconfig';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { DataSourceOptions } from 'typeorm';
 
 @Module({
   imports: [
@@ -18,15 +16,8 @@ import { DataSourceOptions } from 'typeorm';
       load: [appConfig, jwtConfig, dbConfig],
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const config = configService.get<DataSourceOptions>('database');
-        if (!config) {
-          throw new Error('Database configuration not found');
-        }
-        return config;
-      },
+      inject: [dbConfig.KEY],
+      useFactory: (config: TDatabaseConfig) => config,
     }),
     UsersModule, 
     AuthModule],

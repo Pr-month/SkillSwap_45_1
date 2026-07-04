@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+import { ConfigType, registerAs } from '@nestjs/config';
 import { DataSourceOptions } from 'typeorm';
 
 export const dbConfig = registerAs(
@@ -15,3 +15,5 @@ export const dbConfig = registerAs(
     logging: process.env.NODE_ENV !== 'production',
   }),
 );
+
+export type TDatabaseConfig = ConfigType<typeof dbConfig>;
