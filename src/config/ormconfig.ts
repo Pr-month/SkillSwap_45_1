@@ -13,7 +13,6 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_DATABASE,
 
   entities: [path.join(__dirname, '..', '**', '*.entity{.ts}')],
- 
 
   synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
   logging: process.env.TYPEORM_LOGGING === 'true',
