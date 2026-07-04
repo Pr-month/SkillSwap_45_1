@@ -15,19 +15,11 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
         signOptions: {
           expiresIn: config.accessExpiresIn,
         },
-      })
-    })
+      }),
+    }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    JwtAuthGuard,
-  ],
-  exports: [
-    JwtModule,
-    JwtStrategy,
-    JwtAuthGuard,
-  ],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard],
+  exports: [JwtModule, JwtStrategy, JwtAuthGuard],
 })
 export class AuthModule {}
