@@ -1,12 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-
-export interface JwtPayload {
-  sub: string;
-  email?: string;
-  iat?: number;
-  exp?: number;
-}
+import { JwtPayload } from '../guards/jwt-auth.guard';
 
 @Injectable()
 export class JwtStrategy {

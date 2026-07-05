@@ -7,6 +7,13 @@ import {
 import { Request } from 'express';
 import { JwtStrategy } from '../strategies/jwt.strategy';
 
+export interface JwtPayload {
+  sub: string;
+  email?: string;
+  iat?: number;
+  exp?: number;
+}
+
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtStrategy: JwtStrategy) {}
