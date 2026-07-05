@@ -3,9 +3,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { jwtConfig, IJwtConfig } from '../config/jwt.config';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
+    UsersModule,
     JwtModule.registerAsync({
       inject: [jwtConfig.KEY],
       useFactory: (config: IJwtConfig) => ({
@@ -18,6 +20,6 @@ import { jwtConfig, IJwtConfig } from '../config/jwt.config';
   ],
   controllers: [AuthController],
   providers: [AuthService],
-  exports: [JwtModule],
+  exports: [JwtModule, AuthService],
 })
 export class AuthModule {}
