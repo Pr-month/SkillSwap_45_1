@@ -19,8 +19,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       inject: [dbConfig.KEY],
       useFactory: (config: TDatabaseConfig) => config,
     }),
-    UsersModule, 
-    AuthModule],
+    UsersModule,
+    AuthModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
