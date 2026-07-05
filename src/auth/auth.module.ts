@@ -3,6 +3,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { jwtConfig, IJwtConfig } from '../config/jwt.config';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -13,11 +15,11 @@ import { jwtConfig, IJwtConfig } from '../config/jwt.config';
         signOptions: {
           expiresIn: config.accessExpiresIn,
         },
-      })
-    })
+      }),
+    }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [JwtModule],
+  providers: [AuthService, JwtStrategy, JwtAuthGuard],
+  exports: [JwtModule, JwtStrategy, JwtAuthGuard],
 })
 export class AuthModule {}
