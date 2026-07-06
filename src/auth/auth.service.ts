@@ -44,11 +44,7 @@ export class AuthService {
       role: user.role,
     };
 
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, {
-      secret: this.jwtConfiguration.refreshSecret,
-      expiresIn: this.jwtConfiguration.refreshExpiresIn,
-    });
+    const { accessToken, refreshToken } = this.generateTokens(payload);
 
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepository.update(user.id, {
@@ -56,20 +52,20 @@ export class AuthService {
     });
 
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        about: user.about,
-        birthdate: user.birthdate,
-        city: user.city,
-        gender: user.gender,
-        avatar: user.avatar,
-        role: user.role,
-      },
+      user,
       accessToken,
       refreshToken,
     };
+  }
+
+  private generateTokens(payload: JwtPayload) {
+    const accessToken = this.jwtService.sign(payload);
+    const refreshToken = this.jwtService.sign(payload, {
+      secret: this.jwtConfiguration.refreshSecret,
+      expiresIn: this.jwtConfiguration.refreshExpiresIn,
+    });
+
+    return { accessToken, refreshToken };
   }
 
   create(createAuthDto: CreateAuthDto) {
