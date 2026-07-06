@@ -17,19 +17,7 @@ export class UsersService {
   }
 
   findAll() {
-    return this.usersRepository.find({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        about: true,
-        birthdate: true,
-        city: true,
-        gender: true,
-        avatar: true,
-        role: true,
-      },
-    });
+    return this.usersRepository.find();
   }
 
   findOne(id: number) {
