@@ -6,7 +6,10 @@ import { IJwtConfig, jwtConfig } from 'src/config/jwt.config';
 import { JwtPayload } from '../auth.types';
 
 @Injectable()
-export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+export class RefreshTokenStrategy extends PassportStrategy(
+  Strategy,
+  'jwt-refresh',
+) {
   constructor(
     @Inject(jwtConfig.KEY)
     private readonly jwtConfig: IJwtConfig,
@@ -17,13 +20,14 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refres
       },
       ignoreExpiration: false,
       secretOrKey: jwtConfig.refreshSecret,
-      passReqToCallback: true
+      passReqToCallback: true,
     };
     super(options);
   }
 
   async validate(req: Request, payload: JwtPayload) {
-    const refreshToken = req.body?.refreshToken || req.cookies?.refreshToken || null;
+    const refreshToken =
+      req.body?.refreshToken || req.cookies?.refreshToken || null;
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token not found');
     }

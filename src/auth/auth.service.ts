@@ -1,19 +1,22 @@
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { BadRequestException, Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { IJwtConfig, jwtConfig } from '../config/jwt.config';
+import { UserEntity } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { RegisterDto } from './dto/register.dto';
+import { JwtPayload } from './auth.types';
 import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { UserEntity } from '../users/entities/user.entity';
-import { jwtConfig, IJwtConfig } from '../config/jwt.config';
-import { JwtPayload } from './auth.types';
+import { RegisterDto } from './dto/register.dto';
+import { UpdateAuthDto } from './dto/update-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,10 +26,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: IJwtConfig,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
   ) {}
 
-    async register(dto: RegisterDto) {
+  async register(dto: RegisterDto) {
     const existing = await this.usersService.findByEmail(dto.email);
     if (existing) {
       throw new BadRequestException(
@@ -42,10 +45,10 @@ export class AuthService {
       password: hashedPassword,
       about: dto.about,
     });
-    
+
     return { user };
   }
-  
+
   async login(loginDto: LoginDto) {
     const user = await this.usersRepository.findOne({
       where: { email: loginDto.email },
