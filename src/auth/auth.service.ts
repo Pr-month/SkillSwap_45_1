@@ -10,6 +10,7 @@ import { RegisterDto } from './dto/register.dto';
 import { CreateAuthDto } from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { LoginDto } from './dto/login.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { UserEntity } from '../users/entities/user.entity';
 import { jwtConfig, IJwtConfig } from '../config/jwt.config';
 import { JwtPayload } from './auth.types';
@@ -70,17 +71,64 @@ export class AuthService {
     };
 
     const { accessToken, refreshToken } = this.generateTokens(payload);
-
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await this.usersRepository.update(user.id, {
-      refreshToken: hashedRefreshToken,
-    });
+    await this.saveRefreshToken(user.id, refreshToken);
 
     return {
       user,
       accessToken,
       refreshToken,
     };
+  }
+
+  async refresh(refreshTokenDto: RefreshTokenDto) {
+    let payload: JwtPayload;
+
+    try {
+      payload = await this.jwtService.verifyAsync<JwtPayload>(
+        refreshTokenDto.refreshToken,
+        { secret: this.jwtConfiguration.refreshSecret },
+      );
+    } catch {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    const user = await this.usersRepository.findOne({
+      where: { id: payload.sub },
+    });
+
+    if (!user?.refreshToken) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    const isRefreshTokenValid = await bcrypt.compare(
+      refreshTokenDto.refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isRefreshTokenValid) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    const newPayload: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
+    const { accessToken, refreshToken } = this.generateTokens(newPayload);
+    await this.saveRefreshToken(user.id, refreshToken);
+
+    return {
+      accessToken,
+      refreshToken,
+    };
+  }
+
+  private async saveRefreshToken(userId: string, refreshToken: string) {
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    await this.usersRepository.update(userId, {
+      refreshToken: hashedRefreshToken,
+    });
   }
 
   private generateTokens(payload: JwtPayload) {

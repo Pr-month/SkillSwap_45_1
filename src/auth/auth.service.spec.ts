@@ -18,7 +18,7 @@ describe('AuthService', () => {
         },
         {
           provide: JwtService,
-          useValue: { sign: jest.fn() },
+          useValue: { sign: jest.fn(), verifyAsync: jest.fn() },
         },
         {
           provide: jwtConfig.KEY,
