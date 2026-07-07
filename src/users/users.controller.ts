@@ -9,12 +9,11 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { JwtPayload } from '../auth/auth.types';
+import { AuthRequest } from '../auth/auth.types';
 
 @Controller('users')
 export class UsersController {
@@ -32,7 +31,7 @@ export class UsersController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  getCurrentUser(@Request() req: Request & { user: JwtPayload }) {
+  getCurrentUser(@Request() req: AuthRequest) {
     const userId = req.user.sub;
     return this.usersService.findById(userId);
   }
