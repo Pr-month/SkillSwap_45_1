@@ -12,7 +12,9 @@ export class AuthService {
   async register(dto: RegisterDto) {
     const existing = await this.usersService.findByEmail(dto.email);
     if (existing) {
-      throw new BadRequestException('Пользователь с такой почтой уже существует!');
+      throw new BadRequestException(
+        'Пользователь с такой почтой уже существует!',
+      );
     }
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
@@ -23,14 +25,8 @@ export class AuthService {
       password: hashedPassword,
       about: dto.about,
     });
-
-    // Запись пользователя без пароля и токена
-
-    const noSecretDataUser = { ...user } as any;
-    delete noSecretDataUser.password;
-    delete noSecretDataUser.refreshToken;
-
-    return { user: noSecretDataUser };
+    
+    return { user };
   }
 
   create(createAuthDto: CreateAuthDto) {

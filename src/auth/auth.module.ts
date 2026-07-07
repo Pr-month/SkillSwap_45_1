@@ -15,8 +15,8 @@ import { UsersModule } from '../users/users.module';
         signOptions: {
           expiresIn: config.accessExpiresIn,
         },
-      })
-    })
+      }),
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService],
