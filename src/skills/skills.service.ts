@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { SkillEntity } from './entities/skill.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SkillsService {
-  create(createSkillDto: CreateSkillDto) {
-    return 'This action adds a new skill';
+  constructor(
+    @InjectRepository(SkillEntity)
+    private skillRepo: Repository<SkillEntity>,
+  ) {}
+  create(createSkillDto: CreateSkillDto, userId: string) {
+    const skill = this.skillRepo.create({
+      ...createSkillDto,
+      owner: { id: userId },
+    });
+    return this.skillRepo.save(skill);
   }
 
   findAll() {
-    return `This action returns all skills`;
+    return this.skillRepo.find({ relations: { owner: true } });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} skill`;
+  async findOne(id: string) {
+    const skill = await this.skillRepo.findOne({
+      where: { id },
+      relations: { owner: true },
+    });
+    if (!skill) {
+      throw new NotFoundException(`Skill with id ${id} not found`);
+    }
+    return skill;
   }
 
-  update(id: number, updateSkillDto: UpdateSkillDto) {
-    return `This action updates a #${id} skill`;
+  async update(id: string, updateSkillDto: UpdateSkillDto, userId: string) {
+    const skill = await this.findOne(id);
+    if (skill.owner.id !== userId) {
+      throw new ForbiddenException('You can only update your own skills');
+    }
+    await this.skillRepo.update(id, updateSkillDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} skill`;
+  async remove(id: string, userId: string) {
+    const skill = await this.findOne(id);
+    if (skill.owner.id !== userId) {
+      throw new ForbiddenException('You can only delete your own skills');
+    }
+    await this.skillRepo.delete(id);
+    return { message: `Skill ${id} deleted successfully` };
   }
 }
