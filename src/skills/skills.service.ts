@@ -8,6 +8,7 @@ import { UpdateSkillDto } from './dto/update-skill.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SkillEntity } from './entities/skill.entity';
 import { Repository } from 'typeorm';
+import { PaginationDto } from './dto/pagination.dto';
 
 @Injectable()
 export class SkillsService {
@@ -23,8 +24,35 @@ export class SkillsService {
     return this.skillRepo.save(skill);
   }
 
-  findAll() {
-    return this.skillRepo.find({ relations: { owner: true } });
+  async findAll(paginationDto: PaginationDto) {
+    const { page, limit } = paginationDto;
+    const skip = (page - 1) * limit; // сколько записей пропустить
+    const [data, total] = await this.skillRepo.findAndCount({
+      skip,
+      take: limit, // сколько записей взять
+      relations: { owner: true },
+    });
+
+    const totalPages = Math.ceil(total / limit);
+
+    if (total === 0) {
+      if (page !== 1) {
+        throw new NotFoundException(`Page ${page} does not exist. No data available.`);
+      }
+    } else if (page > totalPages) {
+      throw new NotFoundException(`Page ${page} does not exist. Total pages: ${totalPages}`);
+    }
+
+    return {
+      data,
+      meta: {
+        page,
+        limit,
+        totalItems: total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      },};
   }
 
   async findOne(id: string) {
