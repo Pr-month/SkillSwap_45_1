@@ -127,6 +127,52 @@ export class AuthService {
     };
   }
 
+ async logout(refreshTokenDto: RefreshTokenDto) {
+    let payload: JwtPayload;
+
+    try {
+      payload = await this.jwtService.verifyAsync<JwtPayload>(
+        refreshTokenDto.refreshToken,
+        {
+          secret: this.jwtConfiguration.refreshSecret,
+        },
+      );
+    } catch {
+      throw new UnauthorizedException(
+        'Невалидный или истёкший refresh токен',
+      );
+    }
+
+    const user = await this.usersRepository.findOne({
+      where: { id: payload.sub },
+    });
+
+    if (!user?.refreshToken) {
+      throw new UnauthorizedException(
+        'Невалидный или истёкший refresh токен',
+      );
+    }
+
+    const isRefreshTokenValid = await bcrypt.compare(
+      refreshTokenDto.refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isRefreshTokenValid) {
+      throw new UnauthorizedException(
+        'Невалидный или истёкший refresh токен',
+      );
+    }
+
+    await this.usersRepository.update(user.id, {
+      refreshToken: null,
+    });
+
+    return {
+      message: 'Вы успешно вышли из системы',
+    };
+  }
+
   private async saveRefreshToken(userId: string, refreshToken: string) {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepository.update(userId, {

@@ -85,7 +85,7 @@ export class UserEntity {
   @Column({
     nullable: true,
   })
-  refreshToken!: string;
+  refreshToken!: string | null;
 
   // Заявки
   // @OneToMany(
