@@ -44,7 +44,19 @@ export class AuthService {
       about: dto.about,
     });
 
-    return { user };
+    const payload: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    const { accessToken, refreshToken } = this.generateTokens(payload);
+    await this.saveRefreshToken(user.id, refreshToken);
+
+    return { 
+      user,
+      accessToken,
+      refreshToken, 
+    };
   }
 
   async login(loginDto: LoginDto) {
