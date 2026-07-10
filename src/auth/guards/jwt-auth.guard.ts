@@ -6,13 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { JwtStrategy } from '../strategies/jwt.strategy';
-
-export interface JwtPayload {
-  sub: string;
-  email?: string;
-  iat?: number;
-  exp?: number;
-}
+import { JwtPayload } from '../auth.types';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -33,7 +27,7 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid authorization header');
     }
 
-    const payload = await this.jwtStrategy.validate(token);
+    const payload: JwtPayload = await this.jwtStrategy.validate(token);
 
     request['user'] = payload;
 
