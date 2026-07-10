@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -10,12 +11,15 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { UserEntity } from './entities/user.entity';
+import { appConfig, IAppConfig } from '../config/app.config';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly repo: Repository<UserEntity>,
+    @Inject(appConfig.KEY)
+    private readonly appConfiguration: IAppConfig,
   ) {}
 
   async findByEmail(email: string) {
@@ -65,7 +69,10 @@ export class UsersService {
       throw new UnauthorizedException('Неверный текущий пароль');
     }
 
-    const hashedPassword = await bcrypt.hash(dto.newPassword, 10);
+    const hashedPassword = await bcrypt.hash(
+      dto.newPassword,
+      this.appConfiguration.hashSalt,
+    );
     await this.repo.update({ id }, { password: hashedPassword });
   }
 }
