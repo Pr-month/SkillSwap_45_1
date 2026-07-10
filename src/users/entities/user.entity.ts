@@ -6,6 +6,7 @@ import {
   // OneToMany,
   //JoinTable,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 //import { SkillEntity } from './skill.entity';
 //import { CategoryEntity } from './category.entity';
@@ -27,6 +28,7 @@ export class UserEntity {
   email!: string;
 
   @Column()
+  @Exclude()
   password!: string;
 
   @Column({
@@ -85,6 +87,7 @@ export class UserEntity {
   @Column({
     nullable: true,
   })
+  @Exclude()
   refreshToken!: string;
 
   // Заявки
