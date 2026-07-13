@@ -6,18 +6,29 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
   UseGuards,
   Request,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AuthRequest } from '../auth/auth.types';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Patch('me/password')
+  @UseGuards(JwtAuthGuard)
+  updatePassword(
+    @Req() req: AuthRequest,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    return this.usersService.updatePassword(req.user.sub, changePasswordDto);
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
