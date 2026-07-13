@@ -4,13 +4,14 @@ import {
   ExceptionFilter,
   PayloadTooLargeException,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { EntityNotFoundError, QueryFailedError } from 'typeorm';
 
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost): void {
+  catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
+    const response = ctx.getResponse<Response>();
 
     if (exception instanceof EntityNotFoundError) {
       return response.status(404).json({
