@@ -48,8 +48,9 @@ export class UsersService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    await this.repo.update({ id }, updateUserDto as Partial<UserEntity>);
-    return this.findById(id);
+    const user = await this.findById(id);
+    Object.assign(user, updateUserDto);
+    return this.repo.save(user);
   }
 
   async remove(id: string) {
