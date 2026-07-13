@@ -10,3 +10,14 @@ export type JwtPayload = {
 export interface AuthRequest extends Request {
   user: JwtPayload;
 }
+
+export interface RefreshTokenUser {
+  sub: string;
+  email: string;
+  role: string;
+  refreshToken: string;
+}
+
+export interface RequestWithUser extends Request {
+  user: RefreshTokenUser;
+}

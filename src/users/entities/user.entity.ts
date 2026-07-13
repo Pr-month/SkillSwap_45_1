@@ -2,17 +2,17 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  OneToMany,
   // ManyToMany,
-  // OneToMany,
-  //JoinTable,
+  // JoinTable,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
-//import { SkillEntity } from './skill.entity';
-//import { CategoryEntity } from './category.entity';
-//import { RequestEntity } from './request.entity';
+// import { CategoryEntity } from './category.entity';
+// import { RequestEntity } from './request.entity';
 
 import { Gender, UserRole } from '../enums/users.enums';
+import { SkillEntity } from 'src/skills/entities/skill.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -61,11 +61,8 @@ export class UserEntity {
   avatar!: string;
 
   // Навыки пользователя
-  //@OneToMany(
-  //  () => SkillEntity,
-  //  (skill) => skill.author,
-  // )
-  // skills!: SkillEntity[];
+  @OneToMany(() => SkillEntity, (skill) => skill.owner)
+  skills!: SkillEntity[];
 
   // Категории, которым хочет научиться
   // @ManyToMany(() => CategoryEntity)
