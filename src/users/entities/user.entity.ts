@@ -6,6 +6,7 @@ import {
   // ManyToMany,
   // JoinTable,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 // import { CategoryEntity } from './category.entity';
 // import { RequestEntity } from './request.entity';
@@ -27,6 +28,7 @@ export class UserEntity {
   email!: string;
 
   @Column()
+  @Exclude()
   password!: string;
 
   @Column({
@@ -82,7 +84,8 @@ export class UserEntity {
   @Column({
     nullable: true,
   })
-  refreshToken!: string | null;
+  @Exclude()
+  refreshToken!: string;
 
   // Заявки
   // @OneToMany(
