@@ -37,10 +37,14 @@ export class SkillsService {
 
     if (total === 0) {
       if (page !== 1) {
-        throw new NotFoundException(`Page ${page} does not exist. No data available.`);
+        throw new NotFoundException(
+          `Page ${page} does not exist. No data available.`,
+        );
       }
     } else if (page > totalPages) {
-      throw new NotFoundException(`Page ${page} does not exist. Total pages: ${totalPages}`);
+      throw new NotFoundException(
+        `Page ${page} does not exist. Total pages: ${totalPages}`,
+      );
     }
 
     return {
@@ -52,7 +56,8 @@ export class SkillsService {
         totalPages,
         hasNextPage: page < totalPages,
         hasPrevPage: page > 1,
-      },};
+      },
+    };
   }
 
   async findOne(id: string) {

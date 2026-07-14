@@ -53,10 +53,10 @@ export class AuthService {
     const { accessToken, refreshToken } = this.generateTokens(payload);
     await this.saveRefreshToken(user.id, refreshToken);
 
-    return { 
+    return {
       user,
       accessToken,
-      refreshToken, 
+      refreshToken,
     };
   }
 
@@ -138,16 +138,13 @@ export class AuthService {
     };
   }
 
-async logout(userData: RefreshTokenUser)  {
-
+  async logout(userData: RefreshTokenUser) {
     const user = await this.usersRepository.findOne({
       where: { id: userData.sub },
     });
 
     if (!user?.refreshToken) {
-      throw new UnauthorizedException(
-        'Невалидный или истёкший refresh токен',
-      );
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
     }
 
     const isRefreshTokenValid = await bcrypt.compare(
@@ -156,9 +153,7 @@ async logout(userData: RefreshTokenUser)  {
     );
 
     if (!isRefreshTokenValid) {
-      throw new UnauthorizedException(
-        'Невалидный или истёкший refresh токен',
-      );
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
     }
 
     await this.usersRepository.update(user.id, {

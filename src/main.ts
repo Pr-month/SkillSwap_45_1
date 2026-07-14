@@ -2,7 +2,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { appConfig, IAppConfig } from './config/app.config';
-import { ValidationPipe } from '@nestjs/common';
+import { AllExceptionFilter } from './common/all-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,6 +17,7 @@ async function bootstrap() {
   );
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  app.useGlobalFilters(new AllExceptionFilter());
 
   const config = app.get<IAppConfig>(appConfig.KEY);
   await app.listen(config.port);

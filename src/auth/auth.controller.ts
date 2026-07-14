@@ -6,16 +6,14 @@ import {
   HttpCode,
   HttpStatus,
   UseGuards,
-  Req
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenGuard } from './guards/refreshGuard';
-import {RequestWithUser} from './auth.types';
-
-
+import { RequestWithUser } from './auth.types';
 
 @Controller('auth')
 export class AuthController {
@@ -33,12 +31,12 @@ export class AuthController {
     return this.authService.refresh(refreshTokenDto);
   }
 
-@Post('logout')
-@UseGuards(RefreshTokenGuard)
-@HttpCode(HttpStatus.OK)
-logout(@Req() req: RequestWithUser) {
-  return this.authService.logout(req.user);
-}
+  @Post('logout')
+  @UseGuards(RefreshTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  logout(@Req() req: RequestWithUser) {
+    return this.authService.logout(req.user);
+  }
   // @Post()
   // create(@Body() createAuthDto: CreateAuthDto) {
   //   return this.authService.create(createAuthDto);
