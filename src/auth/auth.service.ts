@@ -12,11 +12,10 @@ import { IJwtConfig, jwtConfig } from '../config/jwt.config';
 import { UserEntity } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { JwtPayload } from './auth.types';
-import { CreateAuthDto } from './dto/create-auth.dto';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { RefreshTokenUser } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -46,7 +45,19 @@ export class AuthService {
       about: dto.about,
     });
 
-    return { user };
+    const payload: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      role: user.role,
+    };
+    const { accessToken, refreshToken } = this.generateTokens(payload);
+    await this.saveRefreshToken(user.id, refreshToken);
+
+    return {
+      user,
+      accessToken,
+      refreshToken,
+    };
   }
 
   async login(loginDto: LoginDto) {
@@ -127,6 +138,33 @@ export class AuthService {
     };
   }
 
+  async logout(userData: RefreshTokenUser) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userData.sub },
+    });
+
+    if (!user?.refreshToken) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    const isRefreshTokenValid = await bcrypt.compare(
+      userData.refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isRefreshTokenValid) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    await this.usersRepository.update(user.id, {
+      refreshToken: null,
+    });
+
+    return {
+      message: 'Вы успешно вышли из системы',
+    };
+  }
+
   private async saveRefreshToken(userId: string, refreshToken: string) {
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     await this.usersRepository.update(userId, {
@@ -142,25 +180,5 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
-  }
-
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
-
-  findAll() {
-    return `This action returns all auth`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 }

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { appConfig } from './config/app.config';
 import { jwtConfig } from './config/jwt.config';
+import { SkillsModule } from './skills/skills.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { jwtConfig } from './config/jwt.config';
     }),
     UsersModule,
     AuthModule,
+    SkillsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

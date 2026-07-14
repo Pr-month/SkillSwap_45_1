@@ -1,0 +1,30 @@
+import { UserEntity } from 'src/users/entities/user.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+
+@Entity('skills')
+export class SkillEntity {
+  @PrimaryGeneratedColumn()
+  id!: string;
+
+  @Column()
+  title!: string;
+
+  @Column({ type: 'text', nullable: true })
+  description?: string;
+
+  @Column({ nullable: true })
+  category?: string; // TODO: позже заменить на связь с Category
+
+  @Column('simple-array', { nullable: true })
+  images?: string[];
+
+  @ManyToOne(() => UserEntity, (user) => user.skills, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'ownerId' })
+  owner!: UserEntity;
+}
