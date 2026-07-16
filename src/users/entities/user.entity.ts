@@ -85,7 +85,7 @@ export class UserEntity {
     nullable: true,
   })
   @Exclude()
-  refreshToken!: string;
+  refreshToken!: string | null;
 
   // Заявки
   // @OneToMany(
