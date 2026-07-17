@@ -18,21 +18,14 @@ export class CategoryEntity {
   name!: string;
 
   // Parent
-  @ManyToOne(
-    () => CategoryEntity,
-    (category) => category.children,
-    {
-      nullable: true,
-      onDelete: 'SET NULL',
-    },
-  )
+  @ManyToOne(() => CategoryEntity, (category) => category.children, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'parentId' })
   parent?: CategoryEntity;
 
   // Child
-  @OneToMany(
-    () => CategoryEntity,
-    (category) => category.parent,
-  )
+  @OneToMany(() => CategoryEntity, (category) => category.parent)
   children!: CategoryEntity[];
 }

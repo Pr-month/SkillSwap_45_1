@@ -6,7 +6,7 @@ async function runSeeds() {
   console.log('Run seeds...');
 
   await AppDataSource.initialize();
-  AppDataSource.setOptions({ 
+  AppDataSource.setOptions({
     logging: false,
   });
 
