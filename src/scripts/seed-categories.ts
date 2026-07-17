@@ -1,19 +1,13 @@
-import { AppDataSource } from 'src/config/ormconfig';
+import { DataSource } from 'typeorm';
 import { CategoryEntity } from 'src/categories/entities/category.entity';
 import { CategoriesData } from 'src/scripts/data/seed-categories.data';
 
-async function seedCategories() {
-  await AppDataSource.initialize();
-  AppDataSource.setOptions({
-    logging: false,
-  });
-
-  const categoryRepo = AppDataSource.getRepository(CategoryEntity);
+export async function seedCategories(dataSource: DataSource): Promise<void> {
+  const categoryRepo = dataSource.getRepository(CategoryEntity);
   const categoryCount = await categoryRepo.count();
 
   if (categoryCount > 0) {
     console.log('Categories already seeded');
-    await AppDataSource.destroy();
     return;
   }
 
@@ -39,15 +33,4 @@ async function seedCategories() {
   }
 
   console.log('Categories seeded');
-  await AppDataSource.destroy();
 }
-
-seedCategories()
-  .catch((error) => {
-    console.error('Error seeding categories:', error);
-  })
-  .finally(() => {
-    if (AppDataSource.isInitialized) {
-      AppDataSource.destroy();
-    }
-  });
