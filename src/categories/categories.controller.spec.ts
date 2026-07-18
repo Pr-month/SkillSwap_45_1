@@ -16,7 +16,7 @@ describe('CategoriesController', () => {
         CategoriesService,
         {
           provide: getRepositoryToken(CategoryEntity),
-          useValue: { findOne: jest.fn(), remove: jest.fn() },
+          useValue: { findOne: jest.fn(), remove: jest.fn(), save: jest.fn() },
         },
       ],
     })
