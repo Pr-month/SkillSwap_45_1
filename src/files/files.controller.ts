@@ -6,6 +6,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
 import { multerOptions } from '../config/multer.config';
 import { FilesService } from './files.service';
 
@@ -15,7 +16,7 @@ export class FilesController {
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file', multerOptions))
-  uploadFile(@UploadedFile() file: any) {
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('Файл не загружен');
     }
