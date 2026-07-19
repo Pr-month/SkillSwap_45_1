@@ -45,6 +45,9 @@ export class CategoriesService {
       where: {
         parent: IsNull(),
       },
+      relations: {
+        children: true,
+      },
     });
   }
 
