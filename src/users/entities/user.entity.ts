@@ -2,16 +2,17 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  // ManyToMany,
-  // OneToMany,
-  //JoinTable,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
-//import { SkillEntity } from './skill.entity';
-//import { CategoryEntity } from './category.entity';
-//import { RequestEntity } from './request.entity';
+import { CategoryEntity } from '../../categories/entities/category.entity';
+// import { RequestEntity } from './request.entity';
 
 import { Gender, UserRole } from '../enums/users.enums';
+import { SkillEntity } from 'src/skills/entities/skill.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -27,6 +28,7 @@ export class UserEntity {
   email!: string;
 
   @Column()
+  @Exclude()
   password!: string;
 
   @Column({
@@ -59,21 +61,18 @@ export class UserEntity {
   avatar!: string;
 
   // Навыки пользователя
-  //@OneToMany(
-  //  () => SkillEntity,
-  //  (skill) => skill.author,
-  // )
-  // skills!: SkillEntity[];
+  @OneToMany(() => SkillEntity, (skill) => skill.owner)
+  skills!: SkillEntity[];
 
-  // Категории, которым хочет научиться
-  // @ManyToMany(() => CategoryEntity)
-  // @JoinTable()
-  // wantToLearn!: CategoryEntity[];
+  //Категории, которым хочет научиться
+  @ManyToMany(() => CategoryEntity)
+  @JoinTable()
+  wantToLearn!: CategoryEntity[];
 
   // Избранные навыки
-  // @ManyToMany(() => SkillEntity)
-  // @JoinTable()
-  //favoriteSkills!: SkillEntity[];
+  @ManyToMany(() => SkillEntity)
+  @JoinTable()
+  favoriteSkills!: SkillEntity[];
 
   @Column({
     type: 'enum',
@@ -85,7 +84,8 @@ export class UserEntity {
   @Column({
     nullable: true,
   })
-  refreshToken!: string;
+  @Exclude()
+  refreshToken!: string | null;
 
   // Заявки
   // @OneToMany(

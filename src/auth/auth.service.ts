@@ -15,6 +15,7 @@ import { JwtPayload } from './auth.types';
 import { LoginDto } from './dto/login.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
+import { RefreshTokenUser } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -52,10 +53,10 @@ export class AuthService {
     const { accessToken, refreshToken } = this.generateTokens(payload);
     await this.saveRefreshToken(user.id, refreshToken);
 
-    return { 
+    return {
       user,
       accessToken,
-      refreshToken, 
+      refreshToken,
     };
   }
 
@@ -134,6 +135,33 @@ export class AuthService {
     return {
       accessToken,
       refreshToken,
+    };
+  }
+
+  async logout(userData: RefreshTokenUser) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userData.sub },
+    });
+
+    if (!user?.refreshToken) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    const isRefreshTokenValid = await bcrypt.compare(
+      userData.refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isRefreshTokenValid) {
+      throw new UnauthorizedException('Невалидный или истёкший refresh токен');
+    }
+
+    await this.usersRepository.update(user.id, {
+      refreshToken: null,
+    });
+
+    return {
+      message: 'Вы успешно вышли из системы',
     };
   }
 
