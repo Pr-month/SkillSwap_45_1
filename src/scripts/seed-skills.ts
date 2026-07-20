@@ -10,7 +10,7 @@ export async function seedSkills(dataSource: DataSource): Promise<void> {
   const userRepo = dataSource.getRepository(UserEntity);
 
   for (const skillData of SkillsData) {
-    const owner = await userRepo.findOneByOrFail({ 
+    const owner = await userRepo.findOneByOrFail({
       email: skillData.owner,
     });
     const existing = await skillRepo.findOne({
