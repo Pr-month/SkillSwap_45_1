@@ -1,9 +1,10 @@
 import { AppDataSource } from 'src/config/ormconfig';
 import { seedCategories } from 'src/scripts/seed-categories';
 import { seedUsers } from 'src/scripts/seed-users';
+import { seedSkills } from 'src/scripts/seed-skills';
 
 async function runSeeds() {
-  console.log('Run seeds...');
+  console.log('Running seeds...');
 
   await AppDataSource.initialize();
   AppDataSource.setOptions({
@@ -13,7 +14,7 @@ async function runSeeds() {
   try {
     await seedCategories(AppDataSource);
     await seedUsers(AppDataSource);
-
+    await seedSkills(AppDataSource);
     console.log('Seeds executed successfully');
   } catch (error) {
     console.error('Seeds execution failed:', error);
