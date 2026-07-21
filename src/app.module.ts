@@ -9,6 +9,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { appConfig } from './config/app.config';
 import { jwtConfig } from './config/jwt.config';
 import { SkillsModule } from './skills/skills.module';
+import { FilesModule } from './files/files.module';
+import { RequestsModule } from './requests/requests.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -23,6 +26,9 @@ import { SkillsModule } from './skills/skills.module';
     UsersModule,
     AuthModule,
     SkillsModule,
+    FilesModule,
+    RequestsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

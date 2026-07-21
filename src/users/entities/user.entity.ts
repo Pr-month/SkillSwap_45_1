@@ -3,12 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToMany,
-  // ManyToMany,
-  // JoinTable,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
-// import { CategoryEntity } from './category.entity';
+import { CategoryEntity } from '../../categories/entities/category.entity';
 // import { RequestEntity } from './request.entity';
 
 import { Gender, UserRole } from '../enums/users.enums';
@@ -64,15 +64,15 @@ export class UserEntity {
   @OneToMany(() => SkillEntity, (skill) => skill.owner)
   skills!: SkillEntity[];
 
-  // Категории, которым хочет научиться
-  // @ManyToMany(() => CategoryEntity)
-  // @JoinTable()
-  // wantToLearn!: CategoryEntity[];
+  //Категории, которым хочет научиться
+  @ManyToMany(() => CategoryEntity)
+  @JoinTable()
+  wantToLearn!: CategoryEntity[];
 
   // Избранные навыки
-  // @ManyToMany(() => SkillEntity)
-  // @JoinTable()
-  //favoriteSkills!: SkillEntity[];
+  @ManyToMany(() => SkillEntity)
+  @JoinTable()
+  favoriteSkills!: SkillEntity[];
 
   @Column({
     type: 'enum',
@@ -85,7 +85,7 @@ export class UserEntity {
     nullable: true,
   })
   @Exclude()
-  refreshToken!: string;
+  refreshToken!: string | null;
 
   // Заявки
   // @OneToMany(
