@@ -55,11 +55,37 @@ export class CategoriesService {
     return `This action returns a #${id} category`;
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
+  async update(id: string, updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.repo.findOne({ where: { id } });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+
+    const { parentId, ...rest } = updateCategoryDto;
+
+    if (parentId !== undefined) {
+      if (parentId === id) {
+        throw new BadRequestException(
+          'Категория не может быть родителем самой себя',
+        );
+      }
+      const parent = await this.repo.findOne({ where: { id: parentId } });
+      if (!parent) {
+        throw new NotFoundException('Parent category not found');
+      }
+      category.parent = parent;
+    }
+
+    Object.assign(category, rest);
+
+    return this.repo.save(category);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    const category = await this.repo.findOne({ where: { id } });
+    if (!category) {
+      throw new NotFoundException('Category not found');
+    }
+    return this.repo.remove(category);
   }
 }
