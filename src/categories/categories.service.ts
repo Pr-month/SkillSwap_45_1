@@ -1,27 +1,54 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CategoryEntity } from './entities/category.entity';
+import { IsNull, Repository } from 'typeorm';
+
 
 @Injectable()
 export class CategoriesService {
-  constructor(
+    constructor(
     @InjectRepository(CategoryEntity)
-    private readonly repo: Repository<CategoryEntity>,
+    private readonly categoryRepository: Repository<CategoryEntity>,
   ) {}
 
-  create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+
+
+  async create(createCategoryDto: CreateCategoryDto) {
+    const { name, parentId } = createCategoryDto;
+
+    const category = this.categoryRepository.create({
+      name,
+    });
+
+    if (parentId) {
+      const parent = await this.categoryRepository.findOne({
+        where: {
+          id: parentId,
+        },
+      });
+
+      if (!parent) {
+        throw new NotFoundException('Parent category not found');
+      }
+
+      category.parent = parent;
+    }
+
+    return this.categoryRepository.save(category);
   }
 
+
   findAll() {
-    return `This action returns all categories`;
+    return this.categoryRepository.find({
+      where: {
+        parent: IsNull(),
+      },
+      relations: {
+        children: true,
+      },
+    });
   }
 
   findOne(id: number) {
