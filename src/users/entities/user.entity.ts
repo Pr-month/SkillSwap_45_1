@@ -92,5 +92,5 @@ export class UserEntity {
   //   () => RequestEntity,
   //   (request) => request.user,
   // )
-  // requests!: RequestEntity[]; 
+  // requests!: RequestEntity[];
 }
