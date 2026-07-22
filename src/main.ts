@@ -29,13 +29,16 @@ async function bootstrap() {
   //Swagger конфиг
    const swaggerConfig = new DocumentBuilder()
     .setTitle('SkillSwap')
-    .setDescription('API documentation')
+    .setDescription('Documentation')
     .setVersion('1.0')
+    .addTag('SkillSwap')
     .addBearerAuth()
     .build();
 
+  //Генерация документа
   const document = SwaggerModule.createDocument(app, swaggerConfig);
 
+  //Маршрутизация
   SwaggerModule.setup('docs', app, document);
 
   const config = app.get<IAppConfig>(appConfig.KEY);
