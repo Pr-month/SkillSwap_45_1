@@ -1,11 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RequestEntity } from './entities/request.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class RequestsService {
-  create(createRequestDto: CreateRequestDto) {
-    return 'This action adds a new request';
+  constructor(
+    @InjectRepository(RequestEntity)
+    private readonly requestsRepository: Repository<RequestEntity>,
+  ) {}
+
+  async findIncoming(userId: string) {
+    return this.requestsRepository.find({
+      where: {
+        receiver: {
+          id: userId,
+        },
+      },
+      relations: {
+        sender: true,
+        receiver: true,
+        offeredSkill: true,
+        requestedSkill: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
+  async findOutgoing(userId: string) {
+    return this.requestsRepository.find({
+      where: {
+        sender: {
+          id: userId,
+        },
+      },
+      relations: {
+        sender: true,
+        receiver: true,
+        offeredSkill: true,
+        requestedSkill: true,
+      },
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   findAll() {

@@ -6,10 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { RequestsService } from './requests.service';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { AuthRequest } from 'src/auth/auth.types';
+
 
 @Controller('requests')
 export class RequestsController {
@@ -19,6 +24,20 @@ export class RequestsController {
   create(@Body() createRequestDto: CreateRequestDto) {
     return this.requestsService.create(createRequestDto);
   }
+
+
+  @Get('incoming')
+  @UseGuards(JwtAuthGuard)
+  findIncoming(@Req() req: AuthRequest) {
+    return this.requestsService.findIncoming(req.user.sub);
+  }
+
+  @Get('outgoing')
+  @UseGuards(JwtAuthGuard)
+  findOutgoing(@Req() req: AuthRequest) {
+    return this.requestsService.findOutgoing(req.user.sub);
+  }
+
 
   @Get()
   findAll() {
