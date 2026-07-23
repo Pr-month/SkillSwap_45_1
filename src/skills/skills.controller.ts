@@ -28,6 +28,13 @@ export class SkillsController {
     return this.skillsService.create(createSkillDto, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post(':id/favorite')
+  addToFavorites(@Param('id') id: string, @Req() req: AuthRequest) {
+    const userId = req.user.sub;
+    return this.skillsService.addToFavorites(id, userId);
+  }
+
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.skillsService.findAll(paginationDto);

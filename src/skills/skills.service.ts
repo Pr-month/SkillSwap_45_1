@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -7,6 +8,7 @@ import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SkillEntity } from './entities/skill.entity';
+import { UserEntity } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { PaginationDto } from './dto/pagination.dto';
 
@@ -15,6 +17,8 @@ export class SkillsService {
   constructor(
     @InjectRepository(SkillEntity)
     private skillRepo: Repository<SkillEntity>,
+    @InjectRepository(UserEntity)
+    private userRepo: Repository<UserEntity>,
   ) {}
   create(createSkillDto: CreateSkillDto, userId: string) {
     const skill = this.skillRepo.create({
@@ -87,5 +91,29 @@ export class SkillsService {
     }
     await this.skillRepo.delete(id);
     return { message: `Skill ${id} deleted successfully` };
+  }
+
+  async addToFavorites(skillId: string, userId: string) {
+    const skill = await this.findOne(skillId);
+
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: { favoriteSkills: true },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const alreadyInFavorites = user.favoriteSkills.some(
+      (favorite) => favorite.id === skill.id,
+    );
+    if (alreadyInFavorites) {
+      throw new ConflictException('Навык уже добавлен в избранное');
+    }
+
+    user.favoriteSkills.push(skill);
+    await this.userRepo.save(user);
+
+    return { message: 'Навык добавлен в избранное' };
   }
 }
