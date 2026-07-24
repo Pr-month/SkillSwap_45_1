@@ -47,9 +47,22 @@ export class RequestsController {
     return this.requestsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRequestDto: UpdateRequestDto) {
-    return this.requestsService.update(+id, updateRequestDto);
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/read')
+  markAsRead(@Param('id') id: string, @Req() req: AuthRequest) {
+    return this.requestsService.markAsRead(id, req.user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/accept')
+  accept(@Param('id') id: string, @Req() req: AuthRequest) {
+    return this.requestsService.accept(id, req.user.sub);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/reject')
+  reject(@Param('id') id: string, @Req() req: AuthRequest) {
+    return this.requestsService.reject(id, req.user.sub);
   }
 
   @Delete(':id')
