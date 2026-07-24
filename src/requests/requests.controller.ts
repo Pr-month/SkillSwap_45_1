@@ -15,16 +15,15 @@ import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuthRequest } from 'src/auth/auth.types';
 
-
 @Controller('requests')
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}
 
   @Post()
-  create(@Body() createRequestDto: CreateRequestDto) {
-    return this.requestsService.create(createRequestDto);
+  @UseGuards(JwtAuthGuard)
+  create(@Body() createRequestDto: CreateRequestDto, @Req() req: AuthRequest) {
+    return this.requestsService.create(createRequestDto, req.user.sub);
   }
-
 
   @Get('incoming')
   @UseGuards(JwtAuthGuard)
@@ -37,7 +36,6 @@ export class RequestsController {
   findOutgoing(@Req() req: AuthRequest) {
     return this.requestsService.findOutgoing(req.user.sub);
   }
-
 
   @Get()
   findAll() {

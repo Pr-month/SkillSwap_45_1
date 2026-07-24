@@ -3,6 +3,7 @@ import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RequestEntity } from './entities/request.entity';
+import { SkillEntity } from '../skills/entities/skill.entity';
 import { Repository } from 'typeorm';
 import { RequestStatus } from './enums/requests.enums';
 import { SkillsService } from 'src/skills/skills.service';
@@ -13,7 +14,48 @@ export class RequestsService {
     @InjectRepository(RequestEntity)
     private readonly requestsRepository: Repository<RequestEntity>,
     private skillsService: SkillsService,
+    @InjectRepository(SkillEntity)
+    private readonly skillsRepository: Repository<SkillEntity>,
   ) {}
+
+  async create(createRequestDto: CreateRequestDto, senderId: string) {
+    const { requestedSkillId, offeredSkillId } = createRequestDto;
+
+    const requestedSkill = await this.skillsRepository.findOne({
+      where: { id: requestedSkillId },
+      relations: { owner: true },
+    });
+    if (!requestedSkill) {
+      throw new NotFoundException('Запрашиваемый навык не найден');
+    }
+
+    const offeredSkill = await this.skillsRepository.findOne({
+      where: { id: offeredSkillId },
+      relations: { owner: true },
+    });
+    if (!offeredSkill) {
+      throw new NotFoundException('Предлагаемый навык не найден');
+    }
+
+    if (offeredSkill.owner.id !== senderId) {
+      throw new ForbiddenException('Вы можете предлагать только свои навыки');
+    }
+
+    const receiverId = requestedSkill.owner.id;
+
+    if (receiverId === senderId) {
+      throw new BadRequestException('Нельзя отправить заявку самому себе');
+    }
+
+    const request = this.requestsRepository.create({
+      sender: { id: senderId },
+      receiver: { id: receiverId },
+      offeredSkill: { id: offeredSkillId },
+      requestedSkill: { id: requestedSkillId },
+    });
+
+    return this.requestsRepository.save(request);
+  }
 
   async findIncoming(userId: string) {
     return this.requestsRepository.find({
