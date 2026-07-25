@@ -28,7 +28,6 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.useGlobalFilters(new AllExceptionFilter());
 
-
   //Swagger конфиг
   const swaggerConfig = new DocumentBuilder()
     .setTitle('SkillSwap')
