@@ -6,9 +6,12 @@ import { AppModule } from './app.module';
 import { appConfig, IAppConfig } from './config/app.config';
 import { AllExceptionFilter } from './common/all-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { winstonLogger } from './logger/winston.logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    logger: winstonLogger,
+  });
 
   //Установлен глобальный префикс API - /api
   app.setGlobalPrefix('api');
@@ -27,7 +30,7 @@ async function bootstrap() {
 
 
   //Swagger конфиг
-   const swaggerConfig = new DocumentBuilder()
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('SkillSwap')
     .setDescription('Documentation')
     .setVersion('1.0')
