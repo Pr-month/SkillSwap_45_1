@@ -10,6 +10,6 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [TypeOrmModule.forFeature([SkillEntity, UserEntity]), AuthModule],
   controllers: [SkillsController],
   providers: [SkillsService],
-  exports: [TypeOrmModule],
+  exports: [SkillsService], 
 })
 export class SkillsModule {}

@@ -1,11 +1,11 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class CreateRequestDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   requestedSkillId!: string;
 
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   offeredSkillId!: string;
 }
