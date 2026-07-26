@@ -10,7 +10,7 @@ import {
 
 @Entity('skills')
 export class SkillEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()
@@ -24,7 +24,7 @@ export class SkillEntity {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'categoryId' })
-  category!: CategoryEntity;
+  category?: CategoryEntity;
 
   @Column('simple-array', { nullable: true })
   images?: string[];
