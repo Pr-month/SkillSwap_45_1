@@ -81,7 +81,7 @@ export class UserEntity {
   })
   role!: UserRole;
 
-@Column({
+  @Column({
     type: 'text',
     nullable: true,
   })
