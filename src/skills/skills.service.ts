@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   ForbiddenException,
   Injectable,
@@ -11,6 +12,7 @@ import { SkillEntity } from './entities/skill.entity';
 import { UserEntity } from '../users/entities/user.entity';
 import { Repository } from 'typeorm';
 import { PaginationDto } from './dto/pagination.dto';
+import { CategoryEntity } from '../categories/entities/category.entity';
 
 @Injectable()
 export class SkillsService {
@@ -19,10 +21,27 @@ export class SkillsService {
     private skillRepo: Repository<SkillEntity>,
     @InjectRepository(UserEntity)
     private userRepo: Repository<UserEntity>,
+    @InjectRepository(CategoryEntity)
+    private categoryRepo: Repository<CategoryEntity>,
   ) {}
-  create(createSkillDto: CreateSkillDto, userId: string) {
+  async create(createSkillDto: CreateSkillDto, userId: string) {
+    let category: CategoryEntity | null = null;
+    if (createSkillDto.category) {
+      const foundCategory = await this.categoryRepo.findOne({
+        where: { id: createSkillDto.category },
+      });
+      if (!foundCategory) {
+        throw new BadRequestException('Указанная категория не найдена');
+      }
+      category = foundCategory;
+    }
+
+    const categoryValue = category ? { id: category.id } : undefined;
     const skill = this.skillRepo.create({
-      ...createSkillDto,
+      title: createSkillDto.title,
+      description: createSkillDto.description,
+      images: createSkillDto.images,
+      ...(categoryValue && { category: categoryValue }),
       owner: { id: userId },
     });
     return this.skillRepo.save(skill);
@@ -34,7 +53,7 @@ export class SkillsService {
     const [data, total] = await this.skillRepo.findAndCount({
       skip,
       take: limit, // сколько записей взять
-      relations: { owner: true },
+      relations: { owner: true, category: true },
     });
 
     const totalPages = Math.ceil(total / limit);
@@ -80,7 +99,34 @@ export class SkillsService {
     if (skill.owner.id !== userId) {
       throw new ForbiddenException('You can only update your own skills');
     }
-    await this.skillRepo.update(id, updateSkillDto);
+
+    let category: any = skill.category;
+    if (updateSkillDto.category !== undefined) {
+      if (updateSkillDto.category === null) {
+        category = null;
+      } else {
+        const foundCategory = await this.categoryRepo.findOne({
+          where: { id: updateSkillDto.category },
+        });
+        if (!foundCategory) {
+          throw new BadRequestException('Указанная категория не найдена');
+        }
+        category = foundCategory;
+      }
+    }
+
+    const updateData: any = {};
+    if (updateSkillDto.title !== undefined) updateData.title = updateSkillDto.title;
+    if (updateSkillDto.description !== undefined) updateData.description = updateSkillDto.description;
+    if (updateSkillDto.images !== undefined) updateData.images = updateSkillDto.images;
+    // Категория
+    if (updateSkillDto.category !== undefined) {
+      updateData.category = category;
+    }
+
+    await this.skillRepo.update(id, updateData);
+
+    // Возвращаем обновлённый навык
     return this.findOne(id);
   }
 
@@ -115,5 +161,31 @@ export class SkillsService {
     await this.userRepo.save(user);
 
     return { message: 'Навык добавлен в избранное' };
+  }
+
+  async removeFromFavorites(skillId: string, userId: string) {
+    const skill = await this.findOne(skillId);
+
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+      relations: { favoriteSkills: true },
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const isInFavorites = user.favoriteSkills.some(
+      (favorite) => favorite.id === skill.id,
+    );
+    if (!isInFavorites) {
+      throw new NotFoundException('Навык не найден в избранном');
+    }
+
+    user.favoriteSkills = user.favoriteSkills.filter(
+      (favorite) => favorite.id !== skill.id,
+    );
+    await this.userRepo.save(user);
+
+    return { message: 'Навык удалён из избранного' };
   }
 }
