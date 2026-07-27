@@ -105,7 +105,7 @@ export class RequestsService {
     return `This action returns all requests`;
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return `This action returns a #${id} request`;
   }
 
@@ -180,7 +180,7 @@ export class RequestsService {
       {
         title: offeredSkill.title,
         description: offeredSkill.description,
-        category: offeredSkill.category,
+        categoryId: offeredSkill.category?.id,
         images: offeredSkill.images,
       },
       receiver.id,
@@ -191,7 +191,7 @@ export class RequestsService {
       {
         title: requestedSkill.title,
         description: requestedSkill.description,
-        category: requestedSkill.category,
+        categoryId: requestedSkill.category?.id,
         images: requestedSkill.images,
       },
       sender.id,

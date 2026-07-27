@@ -44,7 +44,7 @@ export class RequestsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.requestsService.findOne(+id);
+    return this.requestsService.findOne(id); //Продолжаем передавать строку с айдишкой в формате uuid
   }
 
   @UseGuards(JwtAuthGuard)
