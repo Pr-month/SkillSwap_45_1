@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +12,7 @@ import { SkillEntity } from '../skills/entities/skill.entity';
 import { Repository } from 'typeorm';
 import { RequestStatus } from './enums/requests.enums';
 import { SkillsService } from 'src/skills/skills.service';
+import { UserRole } from '../users/enums/users.enums';
 
 @Injectable()
 export class RequestsService {
@@ -136,7 +142,12 @@ export class RequestsService {
   private async findRequestOrFail(requestId: string): Promise<RequestEntity> {
     const request = await this.requestsRepository.findOne({
       where: { id: requestId },
-      relations: {sender:true , receiver:true, offeredSkill:true, requestedSkill:true},
+      relations: {
+        sender: true,
+        receiver: true,
+        offeredSkill: true,
+        requestedSkill: true,
+      },
     });
     if (!request) {
       throw new NotFoundException('Заявка не найдена');
@@ -147,7 +158,9 @@ export class RequestsService {
   // проверяем что пользователь - получатель
   private ensureReceiver(request: RequestEntity, currentUserId: string) {
     if (request.receiver.id !== currentUserId) {
-      throw new ForbiddenException('Только получатель может изменить статус заявки');
+      throw new ForbiddenException(
+        'Только получатель может изменить статус заявки',
+      );
     }
   }
 
@@ -185,7 +198,22 @@ export class RequestsService {
     );
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} request`;
+  async remove(
+    requestId: string,
+    currentUserId: string,
+    currentUserRole: UserRole,
+  ) {
+    const request = await this.findRequestOrFail(requestId);
+
+    const isOwner = request.sender.id === currentUserId;
+    const isAdmin = currentUserRole === UserRole.ADMIN;
+
+    if (!isOwner && !isAdmin) {
+      throw new ForbiddenException('Вы можете удалять только свои заявки');
+    }
+
+    await this.requestsRepository.remove(request);
+
+    return { message: 'Заявка удалена' };
   }
 }

@@ -14,23 +14,29 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenGuard } from './guards/refreshGuard';
 import { RequestWithUser } from './auth.types';
+import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { AuthPostLogin, AuthPostLogout, AuthPostRefresh, AuthPostRegister } from './auth.swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+
+  @AuthPostLogin()
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
+  @AuthPostRefresh()
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
   refresh(@Body() refreshTokenDto: RefreshTokenDto) {
     return this.authService.refresh(refreshTokenDto);
   }
 
+  @AuthPostLogout()
   @Post('logout')
   @UseGuards(RefreshTokenGuard)
   @HttpCode(HttpStatus.OK)
@@ -41,7 +47,7 @@ export class AuthController {
   // create(@Body() createAuthDto: CreateAuthDto) {
   //   return this.authService.create(createAuthDto);
   // }
-
+  @AuthPostRegister()
   @Post('register')
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);

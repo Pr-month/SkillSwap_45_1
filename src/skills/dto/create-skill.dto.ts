@@ -11,7 +11,7 @@ export class CreateSkillDto {
 
   @IsUUID()
   @IsOptional()
-  category?: string;
+  categoryId?: string; 
 
   @IsArray()
   @IsString({ each: true })

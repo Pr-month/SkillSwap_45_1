@@ -44,7 +44,7 @@ export class RequestsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.requestsService.findOne(id);
+    return this.requestsService.findOne(id); //Продолжаем передавать строку с айдишкой в формате uuid
   }
 
   @UseGuards(JwtAuthGuard)
@@ -65,8 +65,9 @@ export class RequestsController {
     return this.requestsService.reject(id, req.user.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.requestsService.remove(id);
+  remove(@Param('id') id: string, @Req() req: AuthRequest) {
+    return this.requestsService.remove(id, req.user.sub, req.user.role);
   }
 }
