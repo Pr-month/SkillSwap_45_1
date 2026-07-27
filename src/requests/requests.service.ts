@@ -1,4 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateRequestDto } from './dto/create-request.dto';
 import { UpdateRequestDto } from './dto/update-request.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -137,7 +142,12 @@ export class RequestsService {
   private async findRequestOrFail(requestId: string): Promise<RequestEntity> {
     const request = await this.requestsRepository.findOne({
       where: { id: requestId },
-      relations: {sender:true , receiver:true, offeredSkill:true, requestedSkill:true},
+      relations: {
+        sender: true,
+        receiver: true,
+        offeredSkill: true,
+        requestedSkill: true,
+      },
     });
     if (!request) {
       throw new NotFoundException('Заявка не найдена');
@@ -148,7 +158,9 @@ export class RequestsService {
   // проверяем что пользователь - получатель
   private ensureReceiver(request: RequestEntity, currentUserId: string) {
     if (request.receiver.id !== currentUserId) {
-      throw new ForbiddenException('Только получатель может изменить статус заявки');
+      throw new ForbiddenException(
+        'Только получатель может изменить статус заявки',
+      );
     }
   }
 
