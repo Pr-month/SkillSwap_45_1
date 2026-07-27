@@ -7,6 +7,8 @@ import { SkillEntity } from '../skills/entities/skill.entity';
 import { Repository } from 'typeorm';
 import { RequestStatus } from './enums/requests.enums';
 import { SkillsService } from 'src/skills/skills.service';
+import { NotificationsGateway } from '../notifications/notifications.gateway';
+import { NotificationType } from '../notifications/types/notification-payload.type';
 
 @Injectable()
 export class RequestsService {
@@ -16,6 +18,7 @@ export class RequestsService {
     private skillsService: SkillsService,
     @InjectRepository(SkillEntity)
     private readonly skillsRepository: Repository<SkillEntity>,
+    private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   async create(createRequestDto: CreateRequestDto, senderId: string) {
@@ -54,7 +57,16 @@ export class RequestsService {
       requestedSkill: { id: requestedSkillId },
     });
 
-    return this.requestsRepository.save(request);
+    const savedRequest = await this.requestsRepository.save(request);
+
+    // Уведомляем получателя о новой заявке
+    this.notificationsGateway.notifyUser(receiverId, {
+      type: NotificationType.NEW_REQUEST,
+      skillTitle: requestedSkill.title,
+      fromUser: offeredSkill.owner.name,
+    });
+
+    return savedRequest;
   }
 
   async findIncoming(userId: string) {
@@ -120,6 +132,14 @@ export class RequestsService {
 
     request.status = RequestStatus.ACCEPTED;
     await this.requestsRepository.save(request);
+
+    // Уведомляем отправителя о принятии заявки
+    this.notificationsGateway.notifyUser(request.sender.id, {
+      type: NotificationType.ACCEPTED,
+      skillTitle: request.requestedSkill.title,
+      fromUser: request.receiver.name,
+    });
+
     return request;
   }
 
@@ -130,6 +150,14 @@ export class RequestsService {
 
     request.status = RequestStatus.REJECTED;
     await this.requestsRepository.save(request);
+
+    // Уведомляем отправителя об отклонении заявки
+    this.notificationsGateway.notifyUser(request.sender.id, {
+      type: NotificationType.REJECTED,
+      skillTitle: request.requestedSkill.title,
+      fromUser: request.receiver.name,
+    });
+
     return request;
   }
 
