@@ -65,8 +65,9 @@ export class RequestsController {
     return this.requestsService.reject(id, req.user.sub);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.requestsService.remove(id); //Продолжаем передавать строку с айдишкой в форме uuid
+  remove(@Param('id') id: string, @Req() req: AuthRequest) {
+    return this.requestsService.remove(id, req.user.sub, req.user.role);
   }
 }
