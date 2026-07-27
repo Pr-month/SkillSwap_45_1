@@ -26,9 +26,9 @@ export class SkillsService {
   ) {}
   async create(createSkillDto: CreateSkillDto, userId: string) {
     let category: CategoryEntity | null = null;
-    if (createSkillDto.category) {
+    if (createSkillDto.categoryId !== undefined) {
       const foundCategory = await this.categoryRepo.findOne({
-        where: { id: createSkillDto.category },
+        where: { id: createSkillDto.categoryId },
       });
       if (!foundCategory) {
         throw new BadRequestException('Указанная категория не найдена');
@@ -101,12 +101,12 @@ export class SkillsService {
     }
 
     let category: any = skill.category;
-    if (updateSkillDto.category !== undefined) {
-      if (updateSkillDto.category === null) {
+    if (updateSkillDto.categoryId !== undefined) {
+      if (updateSkillDto.categoryId === null) {
         category = null;
       } else {
         const foundCategory = await this.categoryRepo.findOne({
-          where: { id: updateSkillDto.category },
+          where: { id: updateSkillDto.categoryId },
         });
         if (!foundCategory) {
           throw new BadRequestException('Указанная категория не найдена');
@@ -116,11 +116,14 @@ export class SkillsService {
     }
 
     const updateData: any = {};
-    if (updateSkillDto.title !== undefined) updateData.title = updateSkillDto.title;
-    if (updateSkillDto.description !== undefined) updateData.description = updateSkillDto.description;
-    if (updateSkillDto.images !== undefined) updateData.images = updateSkillDto.images;
+    if (updateSkillDto.title !== undefined)
+      updateData.title = updateSkillDto.title;
+    if (updateSkillDto.description !== undefined)
+      updateData.description = updateSkillDto.description;
+    if (updateSkillDto.images !== undefined)
+      updateData.images = updateSkillDto.images;
     // Категория
-    if (updateSkillDto.category !== undefined) {
+    if (updateSkillDto.categoryId !== undefined) {
       updateData.category = category;
     }
 

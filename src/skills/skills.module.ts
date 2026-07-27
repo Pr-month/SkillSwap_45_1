@@ -8,7 +8,10 @@ import { AuthModule } from 'src/auth/auth.module';
 import { CategoryEntity } from 'src/categories/entities/category.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SkillEntity, UserEntity, CategoryEntity]), AuthModule],
+  imports: [
+    TypeOrmModule.forFeature([SkillEntity, UserEntity, CategoryEntity]),
+    AuthModule,
+  ],
   controllers: [SkillsController],
   providers: [SkillsService],
   exports: [SkillsService],

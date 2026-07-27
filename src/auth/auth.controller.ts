@@ -15,12 +15,16 @@ import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenGuard } from './guards/refreshGuard';
 import { RequestWithUser } from './auth.types';
 import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthPostLogin, AuthPostLogout, AuthPostRefresh, AuthPostRegister } from './auth.swagger';
+import {
+  AuthPostLogin,
+  AuthPostLogout,
+  AuthPostRefresh,
+  AuthPostRegister,
+} from './auth.swagger';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
 
   @AuthPostLogin()
   @Post('login')

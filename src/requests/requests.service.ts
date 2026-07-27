@@ -208,7 +208,7 @@ export class RequestsService {
       {
         title: offeredSkill.title,
         description: offeredSkill.description,
-        category: offeredSkill.category?.id,
+        categoryId: offeredSkill.category?.id,
         images: offeredSkill.images,
       },
       receiver.id,
@@ -219,7 +219,7 @@ export class RequestsService {
       {
         title: requestedSkill.title,
         description: requestedSkill.description,
-        category: requestedSkill.category?.id,
+        categoryId: requestedSkill.category?.id,
         images: requestedSkill.images,
       },
       sender.id,

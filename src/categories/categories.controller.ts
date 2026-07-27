@@ -15,7 +15,13 @@ import { UserRole } from 'src/users/enums/users.enums';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { CategoryDeleteById, CategoryGetAll, CategoryGetById, CategoryPatchUpdate, CategoryPostCreate } from './categories.swagger';
+import {
+  CategoryDeleteById,
+  CategoryGetAll,
+  CategoryGetById,
+  CategoryPatchUpdate,
+  CategoryPostCreate,
+} from './categories.swagger';
 
 @Controller('categories')
 export class CategoriesController {
@@ -34,7 +40,6 @@ export class CategoriesController {
   findAll() {
     return this.categoriesService.findAll();
   }
-
 
   @CategoryGetById()
   @Get(':id')

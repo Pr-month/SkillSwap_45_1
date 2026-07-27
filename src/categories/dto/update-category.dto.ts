@@ -8,7 +8,11 @@ export class UpdateCategoryDto {
   @MaxLength(100)
   name?: string;
 
-  @ApiProperty({ type: String, required: false, description: 'Parent category id' })
+  @ApiProperty({
+    type: String,
+    required: false,
+    description: 'Parent category id',
+  })
   @IsOptional()
   @IsUUID()
   parentId?: string;

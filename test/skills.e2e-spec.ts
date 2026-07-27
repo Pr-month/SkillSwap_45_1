@@ -34,8 +34,12 @@ describe('SkillsController (e2e)', () => {
 
     await app.init();
 
-    userRepo = moduleFixture.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
-    skillRepo = moduleFixture.get<Repository<SkillEntity>>(getRepositoryToken(SkillEntity));
+    userRepo = moduleFixture.get<Repository<UserEntity>>(
+      getRepositoryToken(UserEntity),
+    );
+    skillRepo = moduleFixture.get<Repository<SkillEntity>>(
+      getRepositoryToken(SkillEntity),
+    );
     jwtService = moduleFixture.get<JwtService>(JwtService);
 
     // Очищаем таблицы перед тестами
@@ -160,9 +164,7 @@ describe('SkillsController (e2e)', () => {
     });
 
     it('should return 401 without token', async () => {
-      await request(app.getHttpServer())
-        .get(`/skills/${skillId}`)
-        .expect(401);
+      await request(app.getHttpServer()).get(`/skills/${skillId}`).expect(401);
     });
 
     it('should return 404 for non-existing id', async () => {
@@ -203,7 +205,7 @@ describe('SkillsController (e2e)', () => {
       expect(response.body.description).toBe(updateDto.description);
     });
 
-    it('should return 403 when trying to update another user\'s skill', async () => {
+    it("should return 403 when trying to update another user's skill", async () => {
       // Создаём другого пользователя и его навык
       const otherUser = userRepo.create({
         email: 'other@test.com',
@@ -258,7 +260,7 @@ describe('SkillsController (e2e)', () => {
       expect(found).toBeNull();
     });
 
-    it('should return 403 when trying to delete another user\'s skill', async () => {
+    it("should return 403 when trying to delete another user's skill", async () => {
       const otherUser = userRepo.create({
         email: 'other2@test.com',
         password: await bcrypt.hash('123456', 10),
