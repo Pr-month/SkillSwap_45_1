@@ -15,11 +15,13 @@ import { UserRole } from 'src/users/enums/users.enums';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { CategoryDeleteById, CategoryGetAll, CategoryGetById, CategoryPatchUpdate, CategoryPostCreate } from './categories.swagger';
 
 @Controller('categories')
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
+  @CategoryPostCreate()
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
@@ -27,16 +29,20 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
+  @CategoryGetAll()
   @Get()
   findAll() {
     return this.categoriesService.findAll();
   }
 
+
+  @CategoryGetById()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.categoriesService.findOne(+id);
   }
 
+  @CategoryPatchUpdate()
   @Patch(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
@@ -47,6 +53,7 @@ export class CategoriesController {
     return this.categoriesService.update(id, updateCategoryDto);
   }
 
+  @CategoryDeleteById()
   @Delete(':id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN)
