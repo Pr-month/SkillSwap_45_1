@@ -35,6 +35,13 @@ export class SkillsController {
     return this.skillsService.addToFavorites(id, userId);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id/favorite')
+  removeFromFavorites(@Param('id') id: string, @Req() req: AuthRequest) {
+    const userId = req.user.sub;
+    return this.skillsService.removeFromFavorites(id, userId);
+  }
+
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
     return this.skillsService.findAll(paginationDto);
