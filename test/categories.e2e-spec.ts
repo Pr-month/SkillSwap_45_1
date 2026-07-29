@@ -143,10 +143,8 @@ describe('CategoriesController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .get(`/categories/${rootCategoryId}`)
         .expect(200);
-
-      // В зависимости от реализации findOne, может вернуть объект или строку.
-      // Предполагаем, что сервис вернёт объект категории.
-      // Если findOne ещё не реализован, этот тест упадёт – это сигнал к доработке.
+      
+      // findOne реализован в другом ПР
       expect(response.body).toHaveProperty('id', rootCategoryId);
       expect(response.body).toHaveProperty('name', 'Root Category');
     });
