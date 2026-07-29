@@ -1,6 +1,5 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
   HttpCode,
@@ -14,7 +13,6 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { RefreshTokenGuard } from './guards/refreshGuard';
 import { RequestWithUser } from './auth.types';
-import { ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   AuthPostLogin,
   AuthPostLogout,
