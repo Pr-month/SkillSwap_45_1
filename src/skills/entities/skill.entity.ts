@@ -24,7 +24,7 @@ export class SkillEntity {
     onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'categoryId' })
-  category?: CategoryEntity;
+  category!: CategoryEntity | null;
 
   @Column('simple-array', { nullable: true })
   images?: string[];
