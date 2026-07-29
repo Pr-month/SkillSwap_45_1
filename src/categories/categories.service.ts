@@ -37,7 +37,12 @@ export class CategoriesService {
       category.parent = parent;
     }
 
-    return this.categoryRepository.save(category);
+    await this.categoryRepository.save(category);
+
+    return this.categoryRepository.findOne({
+      where: { id: category.id },
+      relations: { parent: true },
+    });
   }
 
   findAll() {
@@ -51,8 +56,15 @@ export class CategoriesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
+  async findOne(id: string) {
+    const category = await this.categoryRepository.findOne({
+      where: {id},
+      relations: { parent: true, children: true},
+    });
+    if (!category) {
+      throw new NotFoundException(`Category with id ${id} not found`);
+    }
+    return category;
   }
 
   async update(id: string, updateCategoryDto: UpdateCategoryDto) {
