@@ -100,7 +100,7 @@ export class SkillsService {
       throw new ForbiddenException('You can only update your own skills');
     }
 
-    let category: any = skill.category;
+    let category: CategoryEntity | null = skill.category;
     if (updateSkillDto.categoryId !== undefined) {
       if (updateSkillDto.categoryId === null) {
         category = null;
@@ -115,7 +115,7 @@ export class SkillsService {
       }
     }
 
-    const updateData: any = {};
+    const updateData: Partial<SkillEntity> = {};
     if (updateSkillDto.title !== undefined)
       updateData.title = updateSkillDto.title;
     if (updateSkillDto.description !== undefined)

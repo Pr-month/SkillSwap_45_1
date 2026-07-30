@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
+import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,8 +10,29 @@ import { SkillEntity } from '../src/skills/entities/skill.entity';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
+interface SkillResponse {
+  id: string;
+  title: string;
+  description?: string;
+  owner: {
+    id: string;
+    name?: string;
+    email?: string;
+  };
+}
+
+interface PaginatedSkillsResponse {
+  data: SkillResponse[];
+  meta: {
+    page: number;
+    limit: number;
+    totalItems: number;
+    totalPages: number;
+  };
+}
+
 describe('SkillsController (e2e)', () => {
-  let app: INestApplication;
+  let app: INestApplication<App>;
   let userRepo: Repository<UserEntity>;
   let skillRepo: Repository<SkillEntity>;
   let jwtService: JwtService;
@@ -83,9 +105,10 @@ describe('SkillsController (e2e)', () => {
         .send(createDto)
         .expect(201);
 
-      expect(response.body).toHaveProperty('id');
-      expect(response.body.title).toBe(createDto.title);
-      expect(response.body.owner).toHaveProperty('id', userId);
+      const body = response.body as SkillResponse;
+      expect(body).toHaveProperty('id');
+      expect(body.title).toBe(createDto.title);
+      expect(body.owner).toHaveProperty('id', userId);
     });
 
     it('should return 401 if no token', async () => {
@@ -116,10 +139,12 @@ describe('SkillsController (e2e)', () => {
 
       expect(response.body).toHaveProperty('data');
       expect(response.body).toHaveProperty('meta');
-      expect(response.body.meta).toHaveProperty('page', 1);
-      expect(response.body.meta).toHaveProperty('limit', 20);
-      expect(response.body.data.length).toBe(5); // всего 5 записей
-      expect(response.body.meta.totalItems).toBe(5);
+
+      const body = response.body as PaginatedSkillsResponse;
+      expect(body.meta).toHaveProperty('page', 1);
+      expect(body.meta).toHaveProperty('limit', 20);
+      expect(body.data.length).toBe(5); // всего 5 записей
+      expect(body.meta.totalItems).toBe(5);
     });
 
     it('should respect page and limit params', async () => {
@@ -127,10 +152,11 @@ describe('SkillsController (e2e)', () => {
         .get('/skills?page=1&limit=2')
         .expect(200);
 
-      expect(response.body.data.length).toBe(2);
-      expect(response.body.meta.page).toBe(1);
-      expect(response.body.meta.limit).toBe(2);
-      expect(response.body.meta.totalPages).toBe(3); // 5 / 2 = 3
+      const body = response.body as PaginatedSkillsResponse;
+      expect(body.data.length).toBe(2);
+      expect(body.meta.page).toBe(1);
+      expect(body.meta.limit).toBe(2);
+      expect(body.meta.totalPages).toBe(3); // 5 / 2 = 3
     });
 
     it('should return 404 when page out of range', async () => {
@@ -159,8 +185,9 @@ describe('SkillsController (e2e)', () => {
         .set('Authorization', `Bearer ${accessToken}`)
         .expect(200);
 
-      expect(response.body.id).toBe(skillId);
-      expect(response.body.title).toBe('Test skill');
+      const body = response.body as SkillResponse;
+      expect(body.id).toBe(skillId);
+      expect(body.title).toBe('Test skill');
     });
 
     it('should return 401 without token', async () => {
@@ -201,8 +228,9 @@ describe('SkillsController (e2e)', () => {
         .send(updateDto)
         .expect(200);
 
-      expect(response.body.title).toBe(updateDto.title);
-      expect(response.body.description).toBe(updateDto.description);
+      const body = response.body as SkillResponse;
+      expect(body.title).toBe(updateDto.title);
+      expect(body.description).toBe(updateDto.description);
     });
 
     it("should return 403 when trying to update another user's skill", async () => {
