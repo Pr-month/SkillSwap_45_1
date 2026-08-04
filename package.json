@@ -19,6 +19,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e:seed": "cross-env NODE_ENV=test npm run seed && cross-env NODE_ENV=test npm run test:e2e",
     "test:e2e": "cross-env NODE_ENV=test jest --config ./test/jest-e2e.json",
+    "db:clear": "cross-env NODE_ENV=test ts-node -r tsconfig-paths/register src/scripts/clear-db.ts",
+    "test:e2e:clear": "npm run db:clear && npm run test:e2e",
     "seed": "cross-env NODE_ENV=test ts-node -r tsconfig-paths/register src/scripts/seed-all.ts"
   },
   "dependencies": {
