@@ -1,3 +1,4 @@
+import { CategoryEntity } from 'src/categories/entities/category.entity';
 import { UserEntity } from 'src/users/entities/user.entity';
 import {
   Entity,
@@ -9,7 +10,7 @@ import {
 
 @Entity('skills')
 export class SkillEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id!: string;
 
   @Column()
@@ -18,8 +19,12 @@ export class SkillEntity {
   @Column({ type: 'text', nullable: true })
   description?: string;
 
-  @Column({ nullable: true })
-  category?: string; // TODO: позже заменить на связь с Category
+  @ManyToOne(() => CategoryEntity, (category) => category.children, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'categoryId' })
+  category!: CategoryEntity | null;
 
   @Column('simple-array', { nullable: true })
   images?: string[];

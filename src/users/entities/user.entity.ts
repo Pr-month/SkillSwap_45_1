@@ -82,10 +82,11 @@ export class UserEntity {
   role!: UserRole;
 
   @Column({
+    type: 'text',
     nullable: true,
   })
   @Exclude()
-  refreshToken!: string | null;
+  refreshToken?: string | null;
 
   // Заявки
   // @OneToMany(

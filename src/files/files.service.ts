@@ -8,7 +8,7 @@ export class FilesService {
       url: `/uploads/${file.filename}`,
       originalName: file.originalname,
       size: file.size,
-      mimetype: file.mimetype,
+      mimeType: file.mimetype,
     };
   }
 }
