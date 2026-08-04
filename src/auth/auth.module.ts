@@ -26,7 +26,13 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard, RolesGuard, RefreshTokenStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    JwtAuthGuard,
+    RolesGuard,
+    RefreshTokenStrategy,
+  ],
   exports: [JwtModule, JwtStrategy, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

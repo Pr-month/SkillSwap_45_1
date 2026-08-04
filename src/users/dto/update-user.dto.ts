@@ -13,7 +13,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../enums/users.enums';
 
 export class UpdateUserDto {
-  @ApiProperty({ required: false, maxLength: 100, description: 'Имя пользователя' })
+  @ApiProperty({
+    required: false,
+    maxLength: 100,
+    description: 'Имя пользователя',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(100)
@@ -28,7 +32,7 @@ export class UpdateUserDto {
     required: false,
     minLength: 6,
     maxLength: 32,
-    description: 'Пароль пользователя'
+    description: 'Пароль пользователя',
   })
   @IsOptional()
   @IsString()
@@ -36,13 +40,22 @@ export class UpdateUserDto {
   @MaxLength(32)
   password?: string;
 
-  @ApiProperty({ required: false, maxLength: 1000, description: 'Информация о пользователе' })
+  @ApiProperty({
+    required: false,
+    maxLength: 1000,
+    description: 'Информация о пользователе',
+  })
   @IsOptional()
   @IsString()
   @MaxLength(1000)
   about?: string;
 
-  @ApiProperty({ required: false, type: Date, format: 'date', description: 'Дата рождения' })
+  @ApiProperty({
+    required: false,
+    type: Date,
+    format: 'date',
+    description: 'Дата рождения',
+  })
   @IsOptional()
   @IsDateString()
   birthdate?: Date;

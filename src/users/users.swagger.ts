@@ -18,7 +18,10 @@ export function UsersPatchChangePassword() {
     ApiBody({ type: ChangePasswordDto }),
     ApiResponse({ status: 200, description: 'Password changed successfully' }),
     ApiResponse({ status: 400, description: 'Bad request' }),
-    ApiResponse({ status: 401, description: 'Unauthorized or invalid old password' }),
+    ApiResponse({
+      status: 401,
+      description: 'Unauthorized or invalid old password',
+    }),
   );
 }
 

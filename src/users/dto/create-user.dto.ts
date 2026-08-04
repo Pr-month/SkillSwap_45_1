@@ -18,7 +18,10 @@ export class CreateUserDto {
   @MaxLength(100)
   name!: string;
 
-  @ApiProperty({ example: 'sebastian@example.com', description: 'Email пользователя' })
+  @ApiProperty({
+    example: 'sebastian@example.com',
+    description: 'Email пользователя',
+  })
   @IsEmail()
   email!: string;
 
@@ -26,7 +29,7 @@ export class CreateUserDto {
     example: 'password',
     minLength: 6,
     maxLength: 32,
-    description: 'Пароль пользователя'
+    description: 'Пароль пользователя',
   })
   @IsString()
   @MinLength(6)
@@ -39,7 +42,12 @@ export class CreateUserDto {
   @MaxLength(1000)
   about?: string;
 
-  @ApiProperty({ required: false, type: Date, format: 'date', description: 'Дата рождения' })
+  @ApiProperty({
+    required: false,
+    type: Date,
+    format: 'date',
+    description: 'Дата рождения',
+  })
   @IsOptional()
   @IsDateString()
   birthdate?: Date;

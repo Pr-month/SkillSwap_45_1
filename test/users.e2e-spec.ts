@@ -32,7 +32,9 @@ describe('UsersController (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
     await app.init();
 
-    userRepo = moduleFixture.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    userRepo = moduleFixture.get<Repository<UserEntity>>(
+      getRepositoryToken(UserEntity),
+    );
     jwtService = moduleFixture.get<JwtService>(JwtService);
   });
 
@@ -96,9 +98,7 @@ describe('UsersController (e2e)', () => {
 
     it('should return 404 for non-existing id', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000';
-      await request(app.getHttpServer())
-        .get(`/users/${fakeId}`)
-        .expect(404);
+      await request(app.getHttpServer()).get(`/users/${fakeId}`).expect(404);
     });
   });
 
@@ -142,9 +142,7 @@ describe('UsersController (e2e)', () => {
 
     it('should return 404 for non-existing id', async () => {
       const fakeId = '00000000-0000-0000-0000-000000000000';
-      await request(app.getHttpServer())
-        .delete(`/users/${fakeId}`)
-        .expect(404);
+      await request(app.getHttpServer()).delete(`/users/${fakeId}`).expect(404);
     });
   });
 
@@ -159,9 +157,7 @@ describe('UsersController (e2e)', () => {
     });
 
     it('should return 401 if no token', async () => {
-      await request(app.getHttpServer())
-        .get('/users/me')
-        .expect(401);
+      await request(app.getHttpServer()).get('/users/me').expect(401);
     });
   });
 

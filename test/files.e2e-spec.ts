@@ -66,9 +66,7 @@ describe('FilesController (e2e)', () => {
     });
 
     it('should return 400 if no file is uploaded', async () => {
-      await request(app.getHttpServer())
-        .post('/files/upload')
-        .expect(400);
+      await request(app.getHttpServer()).post('/files/upload').expect(400);
     });
 
     it('should return 413 if file is too large (if configured)', async () => {
@@ -100,7 +98,9 @@ describe('FilesController (e2e)', () => {
 
       // Если статус 201, то фильтр не активен - пропускаем проверку
       if (response.status === 201) {
-        console.warn('File type filter not configured – skipping type validation test');
+        console.warn(
+          'File type filter not configured – skipping type validation test',
+        );
         // Удаляем загруженный файл, если он создался
         const fileName = path.basename(response.body.url);
         const savedPath = path.join(uploadDir, fileName);

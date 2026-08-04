@@ -49,8 +49,12 @@ describe('CategoriesController (e2e)', () => {
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
     await app.init();
 
-    categoryRepo = moduleFixture.get<Repository<CategoryEntity>>(getRepositoryToken(CategoryEntity));
-    userRepo = moduleFixture.get<Repository<UserEntity>>(getRepositoryToken(UserEntity));
+    categoryRepo = moduleFixture.get<Repository<CategoryEntity>>(
+      getRepositoryToken(CategoryEntity),
+    );
+    userRepo = moduleFixture.get<Repository<UserEntity>>(
+      getRepositoryToken(UserEntity),
+    );
     jwtService = moduleFixture.get<JwtService>(JwtService);
 
     // Очищаем таблицы (порядок важен из-за внешних ключей)
@@ -66,7 +70,11 @@ describe('CategoriesController (e2e)', () => {
     });
     await userRepo.save(admin);
     adminId = admin.id;
-    const adminPayload = { sub: admin.id, email: admin.email, role: admin.role };
+    const adminPayload = {
+      sub: admin.id,
+      email: admin.email,
+      role: admin.role,
+    };
     adminToken = jwtService.sign(adminPayload);
 
     // Создаём обычного пользователя
@@ -143,7 +151,7 @@ describe('CategoriesController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .get(`/categories/${rootCategoryId}`)
         .expect(200);
-      
+
       // findOne реализован в другом ПР
       expect(response.body).toHaveProperty('id', rootCategoryId);
       expect(response.body).toHaveProperty('name', 'Root Category');

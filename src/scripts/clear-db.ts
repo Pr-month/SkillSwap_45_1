@@ -1,4 +1,4 @@
-import { AppDataSource } from "../config/ormconfig";
+import { AppDataSource } from '../config/ormconfig';
 
 export async function clearDatabase() {
   console.log('🧹 Clearing database with synchronize(true)...');
