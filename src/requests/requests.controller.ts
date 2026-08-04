@@ -13,57 +13,77 @@ import { CreateRequestDto } from './dto/create-request.dto';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AuthRequest } from 'src/auth/auth.types';
+import {
+  RequestPost,
+  RequestGetIncoming,
+  RequestGetOutgoing,
+  RequestGetAll,
+  RequestGetById,
+  RequestPatchRead,
+  RequestPatchAccept,
+  RequestPatchReject,
+  RequestDelete,
+} from './requests.swagger';
 
 @Controller('requests')
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}
 
+  @RequestPost()
   @Post()
   @UseGuards(JwtAuthGuard)
   create(@Body() createRequestDto: CreateRequestDto, @Req() req: AuthRequest) {
     return this.requestsService.create(createRequestDto, req.user.sub);
   }
 
+  @RequestGetIncoming()
   @Get('incoming')
   @UseGuards(JwtAuthGuard)
   findIncoming(@Req() req: AuthRequest) {
     return this.requestsService.findIncoming(req.user.sub);
   }
 
+  @RequestGetOutgoing()
   @Get('outgoing')
   @UseGuards(JwtAuthGuard)
   findOutgoing(@Req() req: AuthRequest) {
     return this.requestsService.findOutgoing(req.user.sub);
   }
 
+  @RequestGetAll()
   @Get()
   findAll() {
     return this.requestsService.findAll();
   }
 
+  @RequestGetById()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.requestsService.findOne(id); //Продолжаем передавать строку с айдишкой в формате uuid
   }
 
+  @RequestPatchRead()
   @UseGuards(JwtAuthGuard)
   @Patch(':id/read')
   markAsRead(@Param('id') id: string, @Req() req: AuthRequest) {
     return this.requestsService.markAsRead(id, req.user.sub);
   }
 
+  @RequestPatchAccept()
   @UseGuards(JwtAuthGuard)
   @Patch(':id/accept')
   accept(@Param('id') id: string, @Req() req: AuthRequest) {
     return this.requestsService.accept(id, req.user.sub);
   }
 
+  @RequestPatchReject()
   @UseGuards(JwtAuthGuard)
   @Patch(':id/reject')
   reject(@Param('id') id: string, @Req() req: AuthRequest) {
     return this.requestsService.reject(id, req.user.sub);
   }
 
+  @RequestDelete()
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(@Param('id') id: string, @Req() req: AuthRequest) {
