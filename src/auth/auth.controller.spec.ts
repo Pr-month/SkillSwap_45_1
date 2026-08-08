@@ -1,43 +1,70 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { JwtService } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserEntity } from '../users/entities/user.entity';
-import { jwtConfig } from '../config/jwt.config';
+import { RefreshTokenGuard } from './guards/refreshGuard';
+import { RequestWithUser } from './auth.types';
 
 describe('AuthController', () => {
   let controller: AuthController;
 
+  const authService = {
+    login: jest.fn(),
+    refresh: jest.fn(),
+    logout: jest.fn(),
+    register: jest.fn(),
+  };
+
   beforeEach(async () => {
+    jest.clearAllMocks();
+
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
-      providers: [
-        AuthService,
-        {
-          provide: getRepositoryToken(UserEntity),
-          useValue: { findOne: jest.fn(), update: jest.fn() },
-        },
-        {
-          provide: JwtService,
-          useValue: { sign: jest.fn(), verifyAsync: jest.fn() },
-        },
-        {
-          provide: jwtConfig.KEY,
-          useValue: {
-            accessSecret: 'test-access-secret',
-            refreshSecret: 'test-refresh-secret',
-            accessExpiresIn: '1h',
-            refreshExpiresIn: '7d',
-          },
-        },
-      ],
-    }).compile();
+      providers: [{ provide: AuthService, useValue: authService }],
+    })
+      .overrideGuard(RefreshTokenGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get<AuthController>(AuthController);
   });
 
   it('should be defined', () => {
     expect(controller).toBeDefined();
+  });
+
+  it('login передаёт dto в сервис', async () => {
+    const dto = { email: 'test@mail.dev', password: 'pass' };
+    await controller.login(dto);
+    expect(authService.login).toHaveBeenCalledWith(dto);
+  });
+
+  it('refresh передаёт dto в сервис', async () => {
+    const dto = { refreshToken: 'token' };
+    await controller.refresh(dto);
+    expect(authService.refresh).toHaveBeenCalledWith(dto);
+  });
+
+  it('logout передаёт данные пользователя из запроса', async () => {
+    const req = {
+      user: {
+        sub: 'user-1',
+        email: 'test@mail.dev',
+        role: 'USER',
+        refreshToken: 'token',
+      },
+    } as RequestWithUser;
+    await controller.logout(req);
+    expect(authService.logout).toHaveBeenCalledWith(req.user);
+  });
+
+  it('register передаёт dto в сервис', async () => {
+    const dto = {
+      name: 'Test',
+      email: 'test@mail.dev',
+      password: 'pass',
+      about: 'about',
+    };
+    await controller.register(dto);
+    expect(authService.register).toHaveBeenCalledWith(dto);
   });
 });
