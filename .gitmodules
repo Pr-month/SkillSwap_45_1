@@ -1,0 +1,3 @@
+[submodule "shared/mailer"]
+	path = shared/mailer
+	url = https://github.com/RolandSallaz/mailer-nest-js-example.git
