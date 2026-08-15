@@ -1,0 +1,54 @@
+.profileMenu {
+  position: relative;
+  display: inline-block;
+}
+
+.triggerButton {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.userName {
+  font-weight: 500;
+}
+
+.menu {
+  z-index: 1000;
+}
+
+.menuItem {
+  text-decoration: none !important;
+}
+
+.menuContent {
+  background: var(--color-secondary);
+  border-radius: 4px;
+  padding: 40px;
+  min-width: 260px;
+  display: flex;
+  gap: 24px;
+  flex-direction: column;
+  font-weight: var(--font-weight-medium);
+}
+
+.menuItemContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+}
+
+.menuItemIcon {
+  margin-left: 8px;
+}
+
+@media (max-width: 960px) {
+  .userName {
+    flex-shrink: 0;
+    display: none;
+  }
+}

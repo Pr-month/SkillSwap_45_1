@@ -1,0 +1,81 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* изменила с 6 на 4, т.к. не соответствовало верстке*/
+  width: 100%;
+}
+
+.label {
+  font-weight: var(--font-weight-regular);
+}
+
+.input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  height: 48px;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 0px 20px;
+  outline: none;
+  background: #fff;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
+  caret-color: var(--color-accent);
+}
+
+.inputContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.hasRightSlot .input {
+  padding-right: 44px;
+}
+
+.rightSlot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: auto;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.input:hover {
+  border: 1px solid var(--color-border);
+}
+
+.input:focus-visible {
+  border-color: var(--color-accent);
+}
+
+.disabled .input {
+  color: #98a2b3;
+  background: #f2f4f7;
+  cursor: not-allowed;
+}
+
+.error .input {
+  border-color: var(--color-error);
+}
+
+.errorText {
+  min-height: 16px;
+  margin-top: -4px;
+  color: var(--color-error);
+  font-weight: var(--font-weight-regular);
+  font-size: 12px;
+}
+
+.input::placeholder {
+  color: var(--color-border);
+  font-weight: var(--font-weight-regular);
+  font-size: 16px;
+}

@@ -1,0 +1,28 @@
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.label {
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base, 16px);
+  font-weight: var(--font-weight-regular, 400);
+  color: var(--color-text);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-12, 12px);
+}
+
+.errorText {
+  font-size: var(--font-size-xs, 12px);
+  font-weight: var(--font-weight-regular, 400);
+  color: var(--color-error);
+  margin: 0;
+}
+
+.disabled {
+  opacity: 0.6;
+}

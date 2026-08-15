@@ -1,0 +1,76 @@
+h2 {
+  margin-block-start: 0; /* хардкод */
+}
+
+.modal {
+  max-width: 556px;
+  width: calc(100% - 32px);
+  padding: 62px 60px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.icon {
+  width: 100px;
+  height: 100px;
+  display: block;
+  margin: 0 0 52px;
+}
+
+.title {
+  font-family: var(--font-family-primary, 'Jost', sans-serif);
+  font-weight: var(--font-weight-medium, 500);
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.011em;
+  text-align: center;
+  vertical-align: middle;
+  color: var(--color-text, #253017);
+  margin-bottom: 12px;
+}
+
+.description {
+  font-family: var(--font-family-base, 'Roboto', sans-serif);
+  font-weight: var(--font-weight-regular, 400);
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0.02em;
+  text-align: center;
+  vertical-align: middle;
+  color: var(--color-text, #253017);
+  margin: 0 0 32px;
+}
+
+.buttonWrapper {
+  width: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* планшет */
+@media (max-width: 1023px) {
+  .description {
+    margin-bottom: 24px;
+  }
+
+  .icon {
+    margin-bottom: 40px;
+  }
+}
+
+/* мобилка */
+@media (max-width: 767px) {
+  .description {
+    margin-bottom: 20px;
+  }
+
+  .icon {
+    margin-bottom: 28px;
+  }
+}

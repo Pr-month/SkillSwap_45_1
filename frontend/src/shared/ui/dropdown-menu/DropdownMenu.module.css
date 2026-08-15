@@ -1,0 +1,13 @@
+.dropdownMenu {
+  background-color: var(--color-secondary);
+  border: none;
+  border-radius: 12px;
+  max-height: 288px;
+  overflow-y: auto;
+  padding-top: 12px;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  line-height: var(--line-height-base);
+  z-index: 1000;
+}

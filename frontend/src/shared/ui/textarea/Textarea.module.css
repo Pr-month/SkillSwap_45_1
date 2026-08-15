@@ -1,0 +1,50 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.label {
+  font-weight: var(--font-weight-regular);
+}
+
+.textarea {
+  padding: 12px 20px;
+  border-radius: var(--radius-large);
+  border: 1px solid var(--color-border);
+  outline: none;
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease;
+  background: var(--color-secondary);
+  caret-color: var(--color-accent);
+  box-sizing: border-box;
+  width: 100%;
+  /* resize: vertical; */
+  height: 96px; /* поправила на определнный размер, из за возможности растягивать, портило верстку*/
+}
+
+.textarea:hover {
+  border: 1px solid var(--color-border);
+}
+
+.disabled .textarea {
+  background: var(--color-secondary);
+  cursor: not-allowed;
+  color: var(--color-disable-tetx);
+}
+
+.error .textarea {
+  border-color: var(--color-error);
+}
+
+.errorText {
+  font-size: 12px;
+  color: var(--color-error);
+  line-height: 16px;
+}
+
+.textarea::placeholder {
+  color: var(--color-border);
+}

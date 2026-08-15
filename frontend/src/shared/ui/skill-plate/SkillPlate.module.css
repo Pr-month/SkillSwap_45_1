@@ -1,0 +1,22 @@
+.skillPlate {
+  background: var(--skill-plate-bg, var(--color-tag-plus));
+  display: inline-block;
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-regular);
+  font-size: 12px; /* font-size: var(--font-size-sm); */
+  line-height: 16px;
+  border-radius: 20px;
+  padding: 8px 12px;
+  /* cursor: pointer; */
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  /* Стили для обрезки текста */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.count {
+  background-color: var(--color-tag-plus);
+}

@@ -1,0 +1,166 @@
+@import '../../app/styles/tokens.css';
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-32);
+  width: 100%;
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 100%;
+}
+
+.title {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-h2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0;
+  margin-block-end: 10px;
+  letter-spacing: -1px;
+}
+
+/* Row-режим */
+.row {
+  display: flex;
+  gap: var(--space-24);
+  scroll-snap-type: none;
+  overflow-x: hidden;
+  padding: 0px;
+  max-width: 100%;
+}
+
+/* Grid-режим */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 324px);
+  gap: var(--space-24);
+  max-width: 100%;
+}
+
+.actionButton {
+  position: relative;
+  bottom: 5px;
+  height: 48px;
+  padding: 12px 24px;
+  border-radius: var(--radius-large); /* 12px из токенов */
+  opacity: 1;
+}
+
+.buttonContent {
+  display: flex;
+  align-items: center;
+  gap: var(--space-24);
+}
+
+.buttonContent svg {
+  position: relative;
+  right: 5px;
+  transition: transform var(--transition-default);
+}
+
+/* Анимация стрелки при ховере  */
+.actionButton:hover .buttonContent svg {
+  transform: translateX(4px);
+}
+
+.cardsContainer {
+  position: relative;
+}
+
+/* Кнопки навигации */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(105, 115, 93, 1);
+  transition: all 0.2s ease;
+  z-index: 1000;
+  padding: 0;
+}
+
+.navButton.navButton {
+  min-height: 32px;
+}
+
+.navButton:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.navButton:focus-visible {
+  outline: 2px solid var(--color-overlay);
+  outline-offset: 2px;
+}
+
+.navButton:hover:not(.disabled) {
+  background-color: #f5f5f5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.navButton.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.navButtonLeft {
+  left: -14px;
+}
+
+.navButtonRight {
+  right: -20px;
+}
+
+/* Планшеты */
+@media (max-width: 1400px) {
+  .grid {
+    grid-template-columns: repeat(2, 324px);
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1060px) {
+  .grid {
+    grid-template-columns: repeat(1, 324px);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    max-width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-12);
+  }
+
+  /* Стили для кнопки на мобилках */
+  .actionButton {
+    max-width: 324px;
+    width: 100%;
+  }
+
+  .buttonContent {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  /* Глобальный стиль для кнопки (если нужен) */
+  .header :global(.button) {
+    width: 100%;
+  }
+}

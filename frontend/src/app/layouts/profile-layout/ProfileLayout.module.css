@@ -1,0 +1,60 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'sidebar'
+    'main';
+}
+
+.sidebar {
+  grid-area: sidebar;
+  padding: 40px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--color-secondary);
+}
+
+.main {
+  grid-area: main;
+  padding: 60px;
+  overflow: auto;
+  box-sizing: border-box;
+  background-color: var(--color-secondary);
+  max-height: 752px;
+}
+
+/* Desktop: 2 колонки (sidebar + content)*/
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 324px 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 'sidebar main';
+    gap: 0 24px;
+  }
+
+  .sidebar {
+    width: 324px;
+    min-width: 324px;
+    border-radius: 24px;
+  }
+
+  .main {
+    border-radius: 24px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .main {
+    padding: 40px;
+  }
+}
+
+/* Tablet: фото, боковое меню, форма — вертикальный порядок */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .layout {
+    grid-template-areas:
+      'sidebar'
+      'main';
+  }
+}

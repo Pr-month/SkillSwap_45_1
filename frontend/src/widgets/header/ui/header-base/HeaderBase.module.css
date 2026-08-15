@@ -1,0 +1,58 @@
+.base {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+/* Скрываем название на мобилках */
+@media (max-width: 768px) {
+  .logo span {
+    display: none;
+  }
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.about {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  cursor: pointer;
+}
+
+.about:hover {
+  color: var(--color-accent);
+}
+
+.skillsButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.skillsButton:hover {
+  color: var(--color-accent);
+}
+
+/* На очень маленьких экранах скрываем навигацию */
+@media (max-width: 480px) {
+  .nav {
+    display: none;
+  }
+}

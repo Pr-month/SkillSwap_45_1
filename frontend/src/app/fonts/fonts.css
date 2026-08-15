@@ -1,0 +1,17 @@
+/* Jost Variable */
+@font-face {
+  font-family: 'Jost';
+  src: url('./Jost-VariableFont_wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Roboto Variable */
+@font-face {
+  font-family: 'Roboto';
+  src: url('./Roboto-VariableFont_wdth\,wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}

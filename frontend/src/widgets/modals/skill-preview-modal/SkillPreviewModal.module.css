@@ -1,0 +1,97 @@
+h2,
+p {
+  margin-top: 0; /* хардкод */
+  margin-bottom: 0; /* хардкод */
+}
+
+.modal.modal {
+  padding: 44px 60px 72px 60px;
+  border-radius: 12px;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  gap: 40px;
+  max-height: 95vh; /* Ограничиваем максимальную высоту */
+  overflow-y: auto; /* Включаем вертикальную прокрутку */
+  overflow-x: hidden;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  gap: 8px;
+}
+
+.titleModal {
+  font-family: var(--font-family-primary, 'Jost', sans-serif);
+  font-weight: var(--font-weight-medium, 500);
+  font-size: 24px;
+  line-height: 28px;
+  letter-spacing: -0.011em;
+  color: var(--color-text, #253017);
+}
+
+.descriptionModal {
+  font-family: var(--font-family-base, 'Roboto', sans-serif);
+  font-weight: var(--font-weight-regular, 400);
+  font-size: 12px;
+  line-height: 16px;
+  letter-spacing: 0.02em;
+  color: var(--color-text, #253017);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-12);
+  justify-content: space-between;
+  width: 100%; /* Контейнер занимает всю ширину */
+}
+
+.actions button {
+  flex: 1; /* Каждая кнопка занимает равную ширину */
+}
+
+.editButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.editButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+.navButton {
+  display: none;
+}
+
+/* Планшеты */
+@media (max-width: 1200px) {
+  .modal.modal {
+    width: max-content;
+    max-width: 80vw;
+    min-width: max-content;
+    max-height: 95vh; /* Ограничиваем максимальную высоту */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+  }
+}
+
+@media (max-width: 768px) {
+  .modal.modal {
+    width: max-content;
+    max-width: 80vw;
+    min-width: 400px;
+    max-height: fit-content;
+    max-height: 95vh; /* Ограничиваем максимальную высоту */
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+  }
+
+  .content {
+    overflow-y: auto;
+    height: 100%;
+  }
+}

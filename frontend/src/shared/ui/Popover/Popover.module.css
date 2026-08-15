@@ -1,0 +1,36 @@
+.popover {
+  position: fixed;
+  background-color: var(--color-secondary, #ffffff);
+  border: 1px solid var(--color-border, #69735d);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 1000; /* Выше хедера */
+  padding: 0;
+  font-family: var(--font-family-base, sans-serif);
+}
+
+/* bottom-end: правый край панели совпадает с правым краем триггера */
+.placementBottomEnd {
+  transform: translateX(-100%);
+}
+
+.popover::-webkit-scrollbar {
+  width: 8px;
+}
+
+.popover::-webkit-scrollbar-track {
+  background: var(--color-bg, #f9faf7);
+  border-radius: 4px;
+}
+
+.popover::-webkit-scrollbar-thumb {
+  background: var(--color-border, #69735d);
+  border-radius: 4px;
+}
+
+.popover::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent, #508826);
+}

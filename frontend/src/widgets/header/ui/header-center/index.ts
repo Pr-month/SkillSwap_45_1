@@ -1,0 +1,1 @@
+export { HeaderCenter } from './HeaderCenter';
