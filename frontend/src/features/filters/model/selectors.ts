@@ -12,15 +12,17 @@ export const selectFilteredUsers = createSelector(
   (filters: TFilterValues, db: Db | null): User[] => {
     if (!db) return [];
 
-    const users = db.users;
+    return db.users.filter((user) => {
+      const skillsWantedIds = user.skillsWantedIds ?? [];
+      const skillsOfferedIds = user.skillsOfferedIds ?? [];
 
-    return users.filter((user) => {
       // фильтрация по типу предложения
       if (filters.offerType !== 'all') {
         const hasMatchingSkills =
           filters.offerType === 'learn'
-            ? user.skillsWantedIds.length > 0
-            : user.skillsOfferedIds.length > 0;
+            ? skillsWantedIds.length > 0
+            : skillsOfferedIds.length > 0;
+
         if (!hasMatchingSkills) return false;
       }
 
@@ -30,24 +32,28 @@ export const selectFilteredUsers = createSelector(
       }
 
       // фильтрация по городам
-      if (filters.cities.length > 0 && !filters.cities.includes(String(user.cityId))) {
+      if (
+        filters.cities.length > 0 &&
+        (!user.city || !filters.cities.includes(user.city))
+      ) {
         return false;
       }
 
-      // фильтрация по категориям и подкатегориям
+      // фильтрация по категориям
       if (Object.keys(filters.categories).length > 0) {
         let hasMatchingCategory = false;
 
-        for (const [categoryIdStr, selectedSubcategories] of Object.entries(filters.categories)) {
+        for (const [categoryIdStr, selectedSubcategories] of Object.entries(
+          filters.categories,
+        )) {
           const categoryId = Number(categoryIdStr);
 
-          // есть ли у пользователя навыки в этой категории
           const userHasSkillsInCategory =
-            user.skillsOfferedIds.some((skillId) => {
+            skillsOfferedIds.some((skillId) => {
               const skill = db.skillsById[skillId];
               return skill?.categoryId === categoryId;
             }) ||
-            user.skillsWantedIds.some((skillId) => {
+            skillsWantedIds.some((skillId) => {
               const skill = db.skillsById[skillId];
               return skill?.categoryId === categoryId;
             });
@@ -58,20 +64,22 @@ export const selectFilteredUsers = createSelector(
               break;
             }
 
-            // если выбраны подкатегории, проверяем их
-            const hasMatchingSubcategory = selectedSubcategories.some((subcatIdStr) => {
-              const subcatId = Number(subcatIdStr);
-              return (
-                user.skillsOfferedIds.some((skillId) => {
-                  const skill = db.skillsById[skillId];
-                  return skill?.subcategoryId === subcatId;
-                }) ||
-                user.skillsWantedIds.some((skillId) => {
-                  const skill = db.skillsById[skillId];
-                  return skill?.subcategoryId === subcatId;
-                })
-              );
-            });
+            const hasMatchingSubcategory = selectedSubcategories.some(
+              (subcatIdStr) => {
+                const subcatId = Number(subcatIdStr);
+
+                return (
+                  skillsOfferedIds.some((skillId) => {
+                    const skill = db.skillsById[skillId];
+                    return skill?.subcategoryId === subcatId;
+                  }) ||
+                  skillsWantedIds.some((skillId) => {
+                    const skill = db.skillsById[skillId];
+                    return skill?.subcategoryId === subcatId;
+                  })
+                );
+              },
+            );
 
             if (hasMatchingSubcategory) {
               hasMatchingCategory = true;

@@ -1,4 +1,4 @@
-export type Id = number;
+export type Id = string;
 
 export type Gender = 'male' | 'female';
 
@@ -20,14 +20,18 @@ export type Skill = {
 export type User = {
   id: Id;
   name: string;
-  cityId: Id;
-  gender: Gender;
-  birthDate: string; // ISO YYYY-MM-DD
-  createdAt: string; // ISO YYYY-MM-DD
-  avatar: string;
-  about: string;
-  skillsOfferedIds: Id[];
-  skillsWantedIds: Id[];
+  email: string;
+
+  city?: string;
+  cityId?: Id;
+
+  gender?: Gender;
+  birthDate?: string; // ISO YYYY-MM-DD
+  createdAt?: string; // ISO YYYY-MM-DD
+  avatar?: string;
+  about?: string;
+  skillsOfferedIds?: Id[];
+  skillsWantedIds?: Id[];
 };
 
 export type Credential = {

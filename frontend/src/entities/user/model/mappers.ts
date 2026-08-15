@@ -1,6 +1,9 @@
 import type { Db } from '@shared/api/mock/normalize';
 import type { User } from '@shared/api/mock/types';
-import type { UserCardProps, SkillBadge } from '@entities/user/ui/user-card/UserCard.types';
+import type {
+  UserCardProps,
+  SkillBadge,
+} from '@entities/user/ui/user-card/UserCard.types';
 import type { CardHeight } from '@entities/user/ui/user-card/UserCard.types';
 
 export interface MapUserToUserCardOpts {
@@ -13,42 +16,120 @@ export interface MapUserToUserCardOpts {
   moreLabel?: string;
   height?: CardHeight;
   className?: string;
-  exchangeOffered?: boolean; // Добавляем новый опциональный параметр
+  exchangeOffered?: boolean;
 }
 
 export const mapUserToUserCardProps = (
   db: Db,
   user: User,
   opts?: MapUserToUserCardOpts,
-): UserCardProps & { id: number } => {
-  const city = db.citiesById[user.cityId].name ?? '';
+): UserCardProps & { id: string } => {
+  /*
+   * CITY
+   *
+   * Backend больше не предоставляет cities/cityId.
+   * Поэтому сначала используем user.city,
+   * а если его нет — оставляем пустую строку.
+   *
+   * Если cityId когда-нибудь снова появится,
+   * поддержка тоже останется.
+   */
+  const city =
+    user.city ??
+    (user.cityId ? db.citiesById[user.cityId]?.name : undefined) ??
+    '';
 
-  const birth = new Date(user.birthDate);
-  const today = new Date();
+  /*
+   * AGE
+   *
+   * birthDate теперь optional.
+   */
   let age: number | undefined;
-  if (!isNaN(birth.getTime())) {
-    age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-      age--;
+
+  if (user.birthDate) {
+    const birth = new Date(user.birthDate);
+
+    if (!isNaN(birth.getTime())) {
+      const today = new Date();
+
+      age =
+        today.getFullYear() -
+        birth.getFullYear();
+
+      const monthDiff =
+        today.getMonth() -
+        birth.getMonth();
+
+      if (
+        monthDiff < 0 ||
+        (
+          monthDiff === 0 &&
+          today.getDate() < birth.getDate()
+        )
+      ) {
+        age--;
+      }
+
+      if (age < 0) {
+        age = undefined;
+      }
     }
-    if (age < 0) age = undefined;
   }
 
-  const skillsOffered: SkillBadge[] = user.skillsOfferedIds
+  /*
+   * SKILLS OFFERED
+   *
+   * skillsOfferedIds теперь optional,
+   * поэтому используем ?? [].
+   */
+  const skillsOffered: SkillBadge[] = (
+    user.skillsOfferedIds ?? []
+  )
     .map((skillId) => {
       const skill = db.skillsById[skillId];
-      return skill ? { id: skill.id, text: skill.title, categoryId: skill.categoryId } : null;
-    })
-    .filter((skill): skill is SkillBadge => skill !== null);
 
-  const skillsWanted: SkillBadge[] = user.skillsWantedIds
+      if (!skill) {
+        return null;
+      }
+
+      return {
+        id: skill.id,
+        text: skill.title,
+        categoryId: skill.categoryId,
+      };
+    })
+    .filter(
+      (skill): skill is SkillBadge =>
+        skill !== null,
+    );
+
+  /*
+   * SKILLS WANTED
+   */
+  const skillsWanted: SkillBadge[] = (
+    user.skillsWantedIds ?? []
+  )
     .map((skillId) => {
       const skill = db.skillsById[skillId];
-      return skill ? { id: skill.id, text: skill.title, categoryId: skill.categoryId } : null;
-    })
-    .filter((skill): skill is SkillBadge => skill !== null);
 
+      if (!skill) {
+        return null;
+      }
+
+      return {
+        id: skill.id,
+        text: skill.title,
+        categoryId: skill.categoryId,
+      };
+    })
+    .filter(
+      (skill): skill is SkillBadge =>
+        skill !== null,
+    );
+
+  /*
+   * Базовые данные карточки.
+   */
   const baseProps: UserCardProps = {
     avatarSrc: user.avatar,
     name: user.name,
@@ -56,14 +137,21 @@ export const mapUserToUserCardProps = (
     age,
     skillsOffered,
     skillsWanted,
-    ...(opts?.about !== undefined ? { about: opts.about } : {}),
+
+    ...(opts?.about !== undefined
+      ? { about: opts.about }
+      : user.about !== undefined
+        ? { about: user.about }
+        : {}),
   };
 
+  /*
+   * Опции компонента имеют приоритет
+   * над базовыми данными.
+   */
   const finalProps: UserCardProps = {
     ...baseProps,
     ...opts,
-    // Явно добавляем exchangeOffered, если он есть в opts
-    ...(opts?.exchangeOffered !== undefined ? { exchangeOffered: opts.exchangeOffered } : {}),
   };
 
   return {
