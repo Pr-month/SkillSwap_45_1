@@ -1,182 +1,142 @@
+/* Основные стили футера */
 .footer {
-  background-color: var(--color-secondary);
-  padding: 24px 16px;
-  color: var(--color-text);
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-sm);
+  background: #fff;
+  color: #000;
+  padding: 34px 0;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+  margin-top: auto;
 }
 
+/* Контейнер содержимого */
 .container {
   max-width: 1440px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px 32px;
+  padding: 0 20px;
+  display: flex;
   align-items: center;
+  gap: 30px;
 }
 
-.columnLogo {
+/* Секция с логотипом */
+.logoSection {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  justify-content: space-between;
+  gap: 80px;
+  flex: 1;
 }
 
-.logo {
-  max-width: max-content;
-  margin-bottom: 112px;
+/* Общие стили для секций */
+.section {
+  flex: 1;
+  padding-top: 6px;
 }
 
-.logo:hover {
-  color: var(--color-accent);
-  text-decoration: none;
-}
-
-.logo:focus,
-.logo:focus-visible {
-  text-decoration: none;
-}
-
-.watermark {
-  margin: 0;
-  font-size: var(--font-size-xs);
-  color: var(--color-border);
-}
-
-.column {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.navList {
+/* Стили списка ссылок */
+.linksList {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 }
 
-.navItem {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  line-height: var(--line-height-base);
-  color: var(--color-text);
-  font-size: var(--font-size-sm);
+/* Стили для списка с точками */
+.withBullets {
+  list-style: disc;
+  padding-left: 30px;
 }
 
-.navButton {
-  padding: 0;
-  margin: 0;
-  border: none;
-  background: transparent;
-  text-align: left;
-  font: inherit;
-  color: inherit;
-  cursor: pointer;
+.withBullets li::marker {
+  color: #000;
 }
 
-.navButton:hover {
-  color: var(--color-accent);
+/* Стили копирайта */
+.copyright {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-top: 20px;
+  padding-left: 14px;
 }
 
-.navButton:focus,
-.navButton:focus-visible {
-  outline: none;
+/* Стили ссылок */
+a {
+  color: #000;
+  text-decoration: none;
+  transition: color 0.2s;
+  font-size: 16px;
 }
 
-@media (max-width: 767px) {
+a:hover {
+  text-decoration: none;
+}
+
+/* Адаптив для мобильных устройств */
+@media (max-width: 768px) {
   .footer {
-    padding: 24px 16px 32px;
+    padding: 20px 0; /* Уменьшаем отступы на мобильных */
   }
 
   .container {
-    gap: 10px;
-    align-items: flex-start;
+    flex-direction: column;
+    gap: 30px;
   }
 
-  .column {
-    gap: 10px;
-  }
-
-  .navList {
-    gap: 10px;
-  }
-
-  .logo {
-    margin-bottom: 40px;
-    order: 1;
-  }
-
-  /*Подпись: внизу по центру */
-  .columnLogo {
-    display: contents;
-  }
-
-  .column {
-    order: 2;
-  }
-
-  .watermark {
-    order: 3;
+  .logoSection {
+    order: -1;
+    align-items: center;
     text-align: center;
+    gap: 40px; /* Уменьшаем разрыв на мобильных */
+  }
+
+  .withBullets {
+    padding-left: 40px;
+  }
+
+  .section {
+    width: 100%;
   }
 }
 
-@media (min-width: 768px) {
-  .footer {
-    padding: 32px 36px;
-  }
-
-  .container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 40px;
-  }
+/* Новые стили для фиксированного варианта */
+.footer.fixed {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
-@media (min-width: 768px) and (max-width: 1024px) {
-  .container {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .columnLogo {
-    display: contents;
-  }
-
-  .columnLogo .logo {
-    grid-column: 1;
-    grid-row: 1;
-    margin-bottom: 16px;
-  }
-
-  .columnLogo .watermark {
-    grid-column: 1;
-    grid-row: 3;
-  }
-
-  .container > .column:nth-child(2) {
-    grid-column: 1;
-    grid-row: 2;
-  }
-
-  .container > .column:nth-child(3) {
-    grid-column: 2;
-    grid-row: 2;
-  }
-
-  .container > .column:nth-child(4) {
-    grid-column: 3;
-    grid-row: 2;
-  }
+/* Класс для страниц с бесконечным скроллом */
+.with-infinite-scroll .footer {
+  position: relative;
+  margin-top: auto;
 }
 
-@media (min-width: 1025px) {
-  .container {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
+/* Темная тема для футера */
+.footer.dark {
+  background: #253017;
+  color: #f0f0f0;
+  border-top: 1px solid #333;
+}
 
-  .container > * {
-    min-width: 0;
+.footer.dark a {
+  color: #f0f0f0;
+}
+
+.footer.dark .withBullets li::marker {
+  color: #f0f0f0;
+}
+
+.footer.dark .copyright {
+  color: #9ca3af;
+}
+
+/* Обновляем медиа-запросы для темной темы */
+@media (max-width: 768px) {
+  .footer.dark {
+    background: #1a1a1a;
   }
 }

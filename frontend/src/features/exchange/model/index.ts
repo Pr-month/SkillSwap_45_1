@@ -1,1 +1,0 @@
-export { selectExchangeOffered } from './exchangeSlice';

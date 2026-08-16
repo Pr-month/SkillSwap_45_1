@@ -1,44 +1,35 @@
 import React from 'react';
-import styles from './Button.module.css';
+import styles from './button.module.css';
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost';
-  fullWidth?: boolean;
+export type TButtonProps = {
   children: React.ReactNode;
-}
+  onClick?: () => void;
+  disabled?: boolean;
+  type?: 'primary' | 'secondary' | 'tertiary' | 'quaternary';
+};
 
-/**
- * Универсальный компонент кнопки для всего проекта.
- * Используется для основных действий: "Войти", "Предложить обмен", "Подробнее" и т.д.
- */
-export const Button: React.FC<ButtonProps> = ({
-  variant = 'primary',
-  fullWidth = false,
-  className = '',
-  type = 'button',
+export const Button: React.FC<TButtonProps> = ({
   children,
+  onClick,
   disabled = false,
-  ...props
+  type = 'primary',
 }) => {
-  const buttonClasses = [
-    styles.button,
-    styles[variant],
-    fullWidth ? styles.fullWidth : '',
-    disabled ? styles.disabled : '',
-    className,
-  ]
-    .join(' ')
-    .trim();
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (disabled) return;
+    onClick?.();
+    e.currentTarget.blur();
+  };
+
+  const buttonClasses = `${styles.button} ${styles[type]} ${disabled ? styles.disabled : ''}`;
 
   return (
     <button
       className={buttonClasses}
-      type={type}
+      onClick={handleClick}
       disabled={disabled}
       aria-disabled={disabled}
-      {...props}
     >
-      {children}
+      <span className={styles.content}>{children}</span>
     </button>
   );
 };
