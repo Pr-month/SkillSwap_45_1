@@ -13,6 +13,13 @@ async function bootstrap() {
     logger: winstonLogger,
   });
 
+  app.enableCors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  });
+
+
+
   //Установлен глобальный префикс API - /api
   app.setGlobalPrefix('api');
 
