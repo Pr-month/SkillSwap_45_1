@@ -5,6 +5,7 @@ import {
   IsDateString,
   IsEnum,
   IsUrl,
+  IsUUID,
   MinLength,
   MaxLength,
 } from 'class-validator';
@@ -60,11 +61,10 @@ export class UpdateUserDto {
   @IsDateString()
   birthdate?: Date;
 
-  @ApiProperty({ required: false, maxLength: 100, description: 'Город' })
+  @ApiProperty({ required: false, description: 'ID города' })
   @IsOptional()
-  @IsString()
-  @MaxLength(100)
-  city?: string;
+  @IsUUID()
+  cityId?: string;
 
   @ApiProperty({ required: false, enum: Gender, description: 'Пол' })
   @IsOptional()
