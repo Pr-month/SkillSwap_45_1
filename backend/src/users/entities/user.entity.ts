@@ -4,11 +4,14 @@ import {
   Column,
   OneToMany,
   ManyToMany,
+  ManyToOne,
   JoinTable,
+  JoinColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 import { CategoryEntity } from '../../categories/entities/category.entity';
+import { CityEntity } from '../../cities/entities/city.entity';
 // import { RequestEntity } from './request.entity';
 
 import { Gender, UserRole } from '../enums/users.enums';
@@ -43,10 +46,16 @@ export class UserEntity {
   })
   birthdate!: Date;
 
-  @Column({
+  // Город пользователя (связь с сущностью City)
+  @ManyToOne(() => CityEntity, (city) => city.users, {
     nullable: true,
+    onDelete: 'SET NULL',
   })
-  city!: string;
+  @JoinColumn({ name: 'cityId' })
+  city?: CityEntity | null;
+
+  @Column({ type: 'uuid', nullable: true })
+  cityId?: string | null;
 
   @Column({
     type: 'enum',

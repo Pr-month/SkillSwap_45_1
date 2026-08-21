@@ -16,6 +16,7 @@ import { FilesModule } from './files/files.module';
 import { RequestsModule } from './requests/requests.module';
 import { CategoriesModule } from './categories/categories.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { CitiesModule } from './cities/cities.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     RequestsModule,
     CategoriesModule,
     NotificationsModule,
+    CitiesModule,
   ],
   controllers: [AppController],
   providers: [
